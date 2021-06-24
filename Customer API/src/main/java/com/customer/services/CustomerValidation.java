@@ -7,10 +7,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.customer.dto.ApiError;
-import com.customer.interfaces.IValidation;
+import com.customer.interfaces.Validation;
 import com.fasterxml.jackson.databind.*;
 
-public class CustomerValidation implements IValidation{
+public class CustomerValidation implements Validation{
 	
 	ApiError apiError;
 	
@@ -31,7 +31,7 @@ public class CustomerValidation implements IValidation{
 		Pattern regexPattern = null;
         Matcher regMatcher = null;
 
-		if(node.get("name") == null || node.get("name").asText().isBlank()) {
+		if(node.get("name") == null) {
 			apiError.setCode("json_filter");
 			apiError.setDescription("Nome(name) do cliente é um campo obrigatório.");
 			
@@ -47,7 +47,7 @@ public class CustomerValidation implements IValidation{
 	        	return apiError;
 	        }
 		}
-		if(node.get("email") == null || node.get("email").asText().isBlank()) {
+		if(node.get("email") == null) {
 			apiError.setCode("json_filter");
 			apiError.setDescription("Email(email) do cliente é um campo obrigatório.");
 			
@@ -63,7 +63,7 @@ public class CustomerValidation implements IValidation{
 				return apiError;
 	        }
 		}
-		if(node.get("birthDate") == null || node.get("birthDate").asText().isBlank()) {
+		if(node.get("birthDate") == null) {
 			apiError.setCode("json_filter");
 			apiError.setDescription("Data de nascimento(birthDate) do cliente é um campo obrigatório.");
 			
@@ -89,7 +89,7 @@ public class CustomerValidation implements IValidation{
 	        	}
 	        }
 		}
-		if(node.get("cpf") == null || node.get("cpf").asText().isBlank()) {
+		if(node.get("cpf") == null) {
 			apiError.setCode("json_filter");
 			apiError.setDescription("Cpf(cpf) do cliente é um campo obrigatório.");
 			
@@ -115,7 +115,7 @@ public class CustomerValidation implements IValidation{
 		        }
 		    }
 		}
-		if(node.get("gender") == null || node.get("gender").asText().isBlank()) {
+		if(node.get("gender") == null) {
 			apiError.setCode("json_filter");
 			apiError.setDescription("Gênero(gender) do cliente é um campo obrigatório.");
 			

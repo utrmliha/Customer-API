@@ -5,10 +5,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.customer.dto.ApiError;
-import com.customer.interfaces.IValidation;
+import com.customer.interfaces.Validation;
 import com.fasterxml.jackson.databind.JsonNode;
 
-public class AddressValidation implements IValidation{
+public class AddressValidation implements Validation{
 
 	ApiError apiError;
 	
@@ -34,7 +34,7 @@ public class AddressValidation implements IValidation{
 		Pattern regexPattern = null;
         Matcher regMatcher = null;
         
-		if(node.get("state") == null || node.get("state").asText().isBlank()) {
+		if(node.get("state") == null) {
 			apiError.setCode("json_filter");
 			apiError.setDescription("Estado(state) é um campo obrigatório.");
 			
@@ -49,19 +49,19 @@ public class AddressValidation implements IValidation{
 				return apiError;
 			}
 		}
-		if(node.get("city") == null || node.get("city").asText().isBlank()) {
+		if(node.get("city") == null) {
 			apiError.setCode("json_filter");
 			apiError.setDescription("Cidade(city) é um campo obrigatório.");
 			
 			return apiError;
 		}
-		if(node.get("neighborhood") == null || node.get("neighborhood").asText().isBlank()) {
+		if(node.get("neighborhood") == null) {
 			apiError.setCode("json_filter");
 			apiError.setDescription("Bairro(neighborhood) é um campo obrigatório.");
 			
 			return apiError;
 		}
-		if(node.get("zipCode") == null || node.get("zipCode").asText().isBlank()) {
+		if(node.get("zipCode") == null) {
 			apiError.setCode("json_filter");
 			apiError.setDescription("Cep(zipCode) é um campo obrigatório.");
 			
@@ -77,13 +77,13 @@ public class AddressValidation implements IValidation{
 				return apiError;
 	        }
 		}
-		if(node.get("street") == null || node.get("street").asText().isBlank()) {
+		if(node.get("street") == null) {
 			apiError.setCode("json_filter");
 			apiError.setDescription("Rua(street) é um campo obrigatório.");
 			
 			return apiError;
 		}
-		if(node.get("number") == null || node.get("number").asText().isBlank()) {
+		if(node.get("number") == null) {
 			}else {
 				regexPattern = Pattern.compile("\\d+");
 				regMatcher = regexPattern.matcher(node.get("number").asText());
@@ -95,7 +95,7 @@ public class AddressValidation implements IValidation{
 					return apiError;
 				}
 		}
-		if(node.get("main") == null || node.get("main").asText().isBlank()) {
+		if(node.get("main") == null) {
 			apiError.setCode("json_filter");
 			apiError.setDescription("Endereço principal(main) é um campo obrigatório.");
 			

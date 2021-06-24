@@ -7,7 +7,7 @@ import com.customer.dto.ApiError;
 import com.customer.filter.AddressFilter;
 import com.customer.pojo.AddressPojo;
 
-public interface IDaoAddress {
+public interface DaoAddress {
 	
 	public ApiError Create(AddressPojo addressPojo);
 	

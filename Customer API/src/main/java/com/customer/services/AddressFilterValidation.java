@@ -5,10 +5,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.customer.dto.ApiError;
-import com.customer.interfaces.IValidation;
+import com.customer.interfaces.Validation;
 import com.fasterxml.jackson.databind.JsonNode;
 
-public class AddressFilterValidation implements IValidation{
+public class AddressFilterValidation implements Validation{
 
 	@Override
 	public ApiError validate(String requestBody) throws IOException {
@@ -27,7 +27,7 @@ public class AddressFilterValidation implements IValidation{
 		Pattern regexPattern = null;
         Matcher regMatcher = null;
         
-        if(node.get("id") == null || node.get("id").asText().isBlank()) {
+        if(node.get("id") == null) {
 		}else {
 			regexPattern = Pattern.compile("\\d+");
 			regMatcher = regexPattern.matcher(node.get("id").asText());
@@ -39,7 +39,7 @@ public class AddressFilterValidation implements IValidation{
 				return apiError;
 			}
 		}
-        if(node.get("state") == null || node.get("state").asText().isBlank()) {
+        if(node.get("state") == null) {
 		}else {
 			regexPattern = Pattern.compile("AC|AL|AP|AM|BA|CE|DF|ES|GO|MA|MT|MS|MG|PA|PB|PR|PE|PI|RJ|RN|RS|RO|RR|SC|SP|SE|TO");
 			regMatcher = regexPattern.matcher(node.get("state").asText());
@@ -51,7 +51,7 @@ public class AddressFilterValidation implements IValidation{
 				return apiError;
 			}
 		}
-        if(node.get("zipCode") == null || node.get("zipCode").asText().isBlank()) {
+        if(node.get("zipCode") == null) {
 		}else {
 			regexPattern = Pattern.compile("[0-9]{5}[-][0-9]{3}");
 	        regMatcher = regexPattern.matcher(node.get("zipCode").asText());
@@ -63,7 +63,7 @@ public class AddressFilterValidation implements IValidation{
 				return apiError;
 	        }
 		}
-        if(node.get("number") == null || node.get("number").asText().isBlank()) {
+        if(node.get("number") == null) {
 		}else {
 			regexPattern = Pattern.compile("\\d+");
 			regMatcher = regexPattern.matcher(node.get("id").asText());
@@ -75,7 +75,7 @@ public class AddressFilterValidation implements IValidation{
 				return apiError;
 			}
 		}
-        if(node.get("main") == null || node.get("main").asText().isBlank()) {
+        if(node.get("main") == null) {
 		}else if(node.get("main").asBoolean() == true || node.get("main").asBoolean() == false){
 		}else {
 			apiError.setCode("json_filter");

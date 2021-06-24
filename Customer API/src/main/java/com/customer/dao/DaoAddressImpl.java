@@ -9,16 +9,18 @@ import org.jdbi.v3.core.mapper.reflect.ConstructorMapper;
 import com.customer.dto.Address;
 import com.customer.dto.ApiError;
 import com.customer.filter.AddressFilter;
-import com.customer.interfaces.IDaoAddress;
+import com.customer.interfaces.DaoAddress;
 import com.customer.jdbi.JdbiConnection;
 import com.customer.pojo.AddressPojo;
 import com.customer.services.PojoToModel;
+import com.google.inject.Inject;
 
-public class DaoAddress implements IDaoAddress{
+public class DaoAddressImpl implements DaoAddress{
 	
-	private static Handle handle = null;
+	private Handle handle;
 	
-	public DaoAddress() {
+	@Inject
+	public DaoAddressImpl() {
 		handle = JdbiConnection.getHandle();
 	}
 	

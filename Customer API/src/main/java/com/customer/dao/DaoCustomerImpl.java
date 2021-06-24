@@ -13,18 +13,20 @@ import com.customer.dto.AddressCustomer_InnerJoin;
 import com.customer.dto.ApiError;
 import com.customer.dto.Customer;
 import com.customer.filter.CustomerFilter;
-import com.customer.interfaces.IDaoCustomer;
+import com.customer.interfaces.DaoCustomer;
 import com.customer.jdbi.JdbiConnection;
 import com.customer.pojo.CustomerPojo;
 import com.customer.services.PojoToModel;
+import com.google.inject.Inject;
 
 import java.time.format.DateTimeFormatter;
 
-public class DaoCustomer implements IDaoCustomer{
+public class DaoCustomerImpl implements DaoCustomer{
 	
-	private static Handle handle = null;
+	private Handle handle;
 	
-	public DaoCustomer() {
+	@Inject
+	public DaoCustomerImpl() {
 		handle = JdbiConnection.getHandle();
 	}
 	

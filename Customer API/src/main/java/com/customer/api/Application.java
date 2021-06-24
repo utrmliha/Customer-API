@@ -1,12 +1,16 @@
 package com.customer.api;
 
-import com.customer.dao.DaoAddress;
-import com.customer.dao.DaoCustomer;
+import com.customer.dao.DaoAddressImpl;
+import com.customer.dao.DaoCustomerImpl;
 import com.customer.dto.Address;
 import com.customer.dto.ApiError;
 import com.customer.dto.Customer;
 import com.customer.filter.AddressFilter;
 import com.customer.filter.CustomerFilter;
+import com.customer.interfaces.DaoAddress;
+import com.customer.interfaces.DaoCustomer;
+import com.customer.module.DaoAddressModule;
+import com.customer.module.DaoCustomerModule;
 import com.customer.pojo.AddressPojo;
 import com.customer.pojo.CustomerPojo;
 import com.customer.services.AddressFilterValidation;
@@ -15,6 +19,8 @@ import com.customer.services.CustomerFilterValidation;
 import com.customer.services.CustomerValidation;
 import com.customer.services.JsonParsing;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 import static spark.Spark.*;
 
@@ -45,7 +51,8 @@ public class Application {
 				CustomerPojo customerPojo = JsonParsing.StringToObject(request.body(), CustomerPojo.class);
 				customerPojo.setAddress(JsonParsing.JsonToObject(JsonParsing.StringToJson(request.body()).findValue("address"), AddressPojo.class));
 				
-				DaoCustomer daoCustomer = new DaoCustomer();
+				Injector injector = Guice.createInjector(new DaoCustomerModule());
+				DaoCustomer daoCustomer = injector.getInstance(DaoCustomer.class);
 				
 				if((apiError = daoCustomer.Create(customerPojo)) != null) {
 					response.status(409);
@@ -59,7 +66,8 @@ public class Application {
 		get("/customers", (request, response) ->{
 			response.type("application/json");
 			
-			DaoCustomer daoCustomer = new DaoCustomer();
+			Injector injector = Guice.createInjector(new DaoCustomerModule());
+			DaoCustomer daoCustomer = injector.getInstance(DaoCustomer.class);
 			CustomerFilter customerFilter = new CustomerFilter();
 			ApiError apiError;
 			
@@ -114,7 +122,8 @@ public class Application {
 		get("/customers/:id", (request, response) -> {
 			response.type("application/json");
 			
-			DaoCustomer daoCustomer = new DaoCustomer();
+			Injector injector = Guice.createInjector(new DaoCustomerModule());
+			DaoCustomer daoCustomer = injector.getInstance(DaoCustomer.class);
 			Customer customer;
 			
 			if((customer = daoCustomer.FindById(Integer.parseInt(request.params("id")))) == null) {
@@ -143,9 +152,11 @@ public class Application {
 					response.status(400);
 					return JsonParsing.ObjectToJson(apiError);
 				}else {
+					Injector injector = Guice.createInjector(new DaoCustomerModule());
+					DaoCustomer daoCustomer = injector.getInstance(DaoCustomer.class);
+					
 					customerPojo = JsonParsing.StringToObject(request.body(), CustomerPojo.class);
 					customerPojo.setId(Integer.parseInt(request.params("id")));
-					DaoCustomer daoCustomer = new DaoCustomer();
 					
 					if((apiError = daoCustomer.Update(customerPojo)) != null) {
 						response.status(404);
@@ -163,7 +174,7 @@ public class Application {
 				}else {
 					customerPojo = JsonParsing.StringToObject(request.body(), CustomerPojo.class);
 					customerPojo.setId(Integer.parseInt(request.params("id")));
-					DaoCustomer daoCustomer = new DaoCustomer();
+					DaoCustomerImpl daoCustomer = new DaoCustomerImpl();
 					if((apiError = daoCustomer.Update(customerPojo)) != null) {
 						response.status(404);
 						return JsonParsing.ObjectToJson(apiError);
@@ -178,8 +189,10 @@ public class Application {
 		delete("/customers/:id", (request, response) -> {
 			response.type("application/json");
 			
-			DaoCustomer daoCustomer = new DaoCustomer();
+			Injector injector = Guice.createInjector(new DaoCustomerModule());
+			DaoCustomer daoCustomer = injector.getInstance(DaoCustomer.class);
 			ApiError apiError;
+			
 			if((apiError = daoCustomer.DeleteById(Integer.parseInt(request.params("id")))) != null) {
 				response.status(404);
 				return JsonParsing.ObjectToJson(apiError);
@@ -192,11 +205,15 @@ public class Application {
 		//================================================INICIO (ADDRESS)======================================================//
 		post("/customers/:id/addresses", (request, response) -> {
 			response.type("application/json");
+			
 			ApiError apiError;
 			AddressValidation addressValidation = new AddressValidation();
 			
 			if((apiError = addressValidation.validate(request.body())) != null){
-				DaoAddress daoAddress = new DaoAddress();
+				
+				Injector injector = Guice.createInjector(new DaoAddressModule());
+				DaoAddress daoAddress = injector.getInstance(DaoAddress.class);
+				
 				AddressPojo addressPojo = JsonParsing.StringToObject(request.body(), AddressPojo.class);
 				addressPojo.setCustomer_id(Integer.parseInt(request.params("id")));
 				
@@ -215,9 +232,11 @@ public class Application {
 		
 		get("/customers/:id/addresses", (request, response) -> {
 			response.type("application/json");
-			ApiError apiError;
+			
 			AddressFilterValidation addressFilterValidation = new AddressFilterValidation();
-			DaoAddress daoAddress = new DaoAddress();
+			Injector injector = Guice.createInjector(new DaoAddressModule());
+			DaoAddress daoAddress = injector.getInstance(DaoAddress.class);
+			ApiError apiError;
 			
 			if(!request.body().isBlank()) {
 				if((apiError = addressFilterValidation.validate(request.body())) != null) {
@@ -235,8 +254,10 @@ public class Application {
 		
 		get("/customers/:id/addresses/:address_id", (request, response) -> {
 			response.type("application/json");
+			
+			Injector injector = Guice.createInjector(new DaoAddressModule());
+			DaoAddress daoAddress = injector.getInstance(DaoAddress.class);
 			ApiError apiError;
-			DaoAddress daoAddress = new DaoAddress();
 			Address address;
 
 			if((address = daoAddress.FindAddressUser(Integer.parseInt(request.params("address_id")), Integer.parseInt(request.params("id")))) == null) {
@@ -254,10 +275,12 @@ public class Application {
 		
 		put("/customers/:id/addresses/:address_id", (request, response) -> {
 			response.type("application/json");
-			ApiError apiError;
-			DaoAddress daoAddress = new DaoAddress();
-			AddressValidation addressValidation = new AddressValidation();
 			
+			Injector injector = Guice.createInjector(new DaoAddressModule());
+			DaoAddress daoAddress = injector.getInstance(DaoAddress.class);
+			AddressValidation addressValidation = new AddressValidation();
+			ApiError apiError;
+
 			if((apiError = addressValidation.validate(request.body())) == null) {
 				
 				AddressPojo addressPojo = JsonParsing.StringToObject(request.body(), AddressPojo.class);
@@ -283,7 +306,8 @@ public class Application {
 		delete("/customers/:id/addresses/:address_id", (request, response) -> {
 			response.type("application/json");
 			
-			DaoAddress daoAddress = new DaoAddress();
+			Injector injector = Guice.createInjector(new DaoAddressModule());
+			DaoAddress daoAddress = injector.getInstance(DaoAddress.class);
 			ApiError apiError;
 			
 			if((apiError = daoAddress.DeleteAddressCustomer(Integer.parseInt(request.params("id")), Integer.parseInt(request.params("address_id")))) != null) {

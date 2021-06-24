@@ -5,10 +5,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.customer.dto.ApiError;
-import com.customer.interfaces.IValidation;
+import com.customer.interfaces.Validation;
 import com.fasterxml.jackson.databind.JsonNode;
 
-public class CustomerFilterValidation implements IValidation {
+public class CustomerFilterValidation implements Validation {
 
 	ApiError apiError;
 	
@@ -41,7 +41,7 @@ public class CustomerFilterValidation implements IValidation {
         	}
         }
         if(node.findValue("sortBy") != null) {
-        	if(node.get("sortBy") == null || node.get("sortBy").asText().isBlank()) {
+        	if(node.get("sortBy") == null) {
         	}else {
         		regexPattern = Pattern.compile("CUSTOMER_NAME|CUSTOMER_BIRTH_DATE|CUSTOMER_CREATED_AT|ADDRESS_STATE|ADDRESS_CITY");
         		regMatcher = regexPattern.matcher(node.get("sortBy").asText());
@@ -54,7 +54,7 @@ public class CustomerFilterValidation implements IValidation {
         	}
         }
         if(node.findValue("sortOrder") != null) {
-        	if(node.get("sortOrder") == null || node.get("sortOrder").asText().isBlank()) {
+        	if(node.get("sortOrder") == null) {
         	}else {
         		regexPattern = Pattern.compile("ASC|DESC");
         		regMatcher = regexPattern.matcher(node.get("sortOrder").asText());

@@ -8,7 +8,7 @@ import com.customer.dto.Customer;
 import com.customer.filter.CustomerFilter;
 import com.customer.pojo.CustomerPojo;
 
-public interface IDaoCustomer {
+public interface DaoCustomer {
 	
 	public ApiError Create(CustomerPojo customerPojo);
 	
