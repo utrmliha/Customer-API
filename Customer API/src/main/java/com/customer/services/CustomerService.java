@@ -1,16 +1,18 @@
-package com.customer.interfaces;
+package com.customer.services;
 
 import java.io.IOException;
 import java.util.List;
 
-import com.customer.dto.ApiError;
 import com.customer.dto.Customer;
 import com.customer.filter.CustomerFilter;
 import com.customer.pojo.CustomerPojo;
 
-public interface DaoCustomer {
+import spark.Request;
+import spark.Response;
+
+public interface CustomerService {
 	
-	public ApiError Create(CustomerPojo customerPojo);
+	public Customer Create(Request request, Response response);
 	
 	public ApiError Update(CustomerPojo customerPojo);
 	

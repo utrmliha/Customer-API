@@ -1,15 +1,17 @@
-package com.customer.interfaces;
+package com.customer.services;
 
 import java.util.List;
 
 import com.customer.dto.Address;
-import com.customer.dto.ApiError;
 import com.customer.filter.AddressFilter;
 import com.customer.pojo.AddressPojo;
 
-public interface DaoAddress {
+import spark.Request;
+import spark.Response;
+
+public interface AddressService {
 	
-	public ApiError Create(AddressPojo addressPojo);
+	public Address Create(Request request, Response response);
 	
 	public ApiError Update(AddressPojo addressPojo);
 	

@@ -1,0 +1,19 @@
+INSERT INTO customer (id,
+					  uuid,
+					  name,
+					  email,
+				  	  birthDate,
+					  cpf,
+					  gender,
+					  createdAt,
+					  updateAt)
+VALUES
+			(DEFAULT,
+			NULL,
+			:name,
+			:email,
+			:birthDate,
+			:cpf,
+			:gender,
+			:createdAt,
+			:updateAt)

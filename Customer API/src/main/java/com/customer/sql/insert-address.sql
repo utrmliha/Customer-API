@@ -1,0 +1,21 @@
+INSERT INTO address (id,
+					state,
+					city,
+					neighborhood,
+					zipCode,
+					street,
+					number,
+					additionalInformation,
+					main,
+					customer_id) 
+VALUES 
+					(DEFAULT,
+					:state,
+					:city,
+					:neighborhood,
+					:zipCode,
+					:street,
+					:number,
+					:additionalInformation,
+					:main,
+					:customer_id)

@@ -1,4 +1,4 @@
-package com.customer.services;
+package com.customer.validation;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -6,37 +6,41 @@ import java.time.Period;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.customer.dto.ApiError;
-import com.customer.interfaces.Validation;
+import com.customer.dto.Customer;
+import com.customer.pojo.CustomerPojo;
+import com.customer.services.ApiError;
+import com.customer.services.JsonService;
+import com.customer.services.PojoToModel;
 import com.fasterxml.jackson.databind.*;
+import com.google.inject.Inject;
 
-public class CustomerValidation implements Validation{
+import spark.Request;
+
+public class CustomerValidationImpl implements CustomerValidation{
 	
-	ApiError apiError;
+	ApiError apiError;//EXCLUIR
+	@Inject
+	JsonService jsonService;
+	@Inject
+	PojoToModel PojoToModel;
 	
 	//simples validação de dados
 	@Override
-	public ApiError validate(String requestBody) throws IOException {
-		apiError = new ApiError();
-		JsonNode node;
+	public CustomerPojo validate(Request request){
+		CustomerPojo customerPojo = null;
 		
 		try {
-			node = JsonParsing.StringToJson(requestBody);
+			customerPojo = jsonService.fromJson(request.body(), CustomerPojo.class);
 		}catch (Exception e) {
-			apiError.setCode("json_format");
-			apiError.setDescription("Falha, Json do corpo da requisição Inválido.");
-			return apiError;
+			System.out.println("Json Inválido.");
 		}
 		
 		Pattern regexPattern = null;
         Matcher regMatcher = null;
 
-		if(node.get("name") == null) {
-			apiError.setCode("json_filter");
-			apiError.setDescription("Nome(name) do cliente é um campo obrigatório.");
-			
-			return apiError;
-		}else{
+		if(customerPojo.getName() == null || customerPojo.getName().isBlank()) {
+			System.out.println("Nome(name) do cliente é um campo obrigatório.");
+		}/*else{
 			regexPattern = Pattern.compile("([0-9])");
 	        regMatcher = regexPattern.matcher(node.get("name").asText());
 	        
@@ -130,7 +134,7 @@ public class CustomerValidation implements Validation{
 				
 				return apiError;
 			}
-		}
-		return null;
+		}*/
+		return customerPojo;
 	}
 }

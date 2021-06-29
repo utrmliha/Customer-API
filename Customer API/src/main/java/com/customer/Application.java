@@ -1,37 +1,71 @@
-package com.customer.api;
+package com.customer;
 
-import com.customer.dao.DaoAddressImpl;
-import com.customer.dao.DaoCustomerImpl;
 import com.customer.dto.Address;
-import com.customer.dto.ApiError;
 import com.customer.dto.Customer;
 import com.customer.filter.AddressFilter;
 import com.customer.filter.CustomerFilter;
-import com.customer.interfaces.DaoAddress;
-import com.customer.interfaces.DaoCustomer;
-import com.customer.module.DaoAddressModule;
-import com.customer.module.DaoCustomerModule;
+import com.customer.module.ApplicationModule;
 import com.customer.pojo.AddressPojo;
 import com.customer.pojo.CustomerPojo;
-import com.customer.services.AddressFilterValidation;
-import com.customer.services.AddressValidation;
-import com.customer.services.CustomerFilterValidation;
-import com.customer.services.CustomerValidation;
-import com.customer.services.JsonParsing;
+import com.customer.services.AddressService;
+import com.customer.services.ApiError;
+import com.customer.services.CustomerService;
+import com.customer.services.CustomerServiceImpl;
+import com.customer.services.JsonService;
+import com.customer.services.JsonServiceImpl;
+import com.customer.validation.AddressFilterValidationImpl;
+import com.customer.validation.AddressValidationImpl;
+import com.customer.validation.CustomerFilterValidationImpl;
+import com.customer.validation.CustomerValidationImpl;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.google.inject.Guice;
+import com.google.inject.Inject;
 import com.google.inject.Injector;
+
+import spark.Spark;
 
 import static spark.Spark.*;
 
 import java.util.List;
 
+import org.eclipse.jetty.util.log.Log;
+
 public class Application {
+	CustomerValidationImpl customerValidation;
+	AddressValidationImpl addressValidation;
+	CustomerPojo customerPojo;
+	CustomerService customerService;
+	AddressService daoAddress;
+	JsonService jsonService;
 	
-	
+	@Inject
+	public Application(CustomerValidationImpl customerValidation,
+						AddressValidationImpl addressValidation,
+						CustomerPojo customerPojo,
+						CustomerService customerService,
+						AddressService daoAddress,
+						JsonService jsonService) {
+
+		this.customerValidation = customerValidation;
+		this.addressValidation = addressValidation;
+		this.customerPojo = customerPojo;
+		this.customerService = customerService;
+		this.daoAddress = daoAddress;
+		this.jsonService = jsonService;
+	}
+
+	public void run() {
+		port(8080);
+		post("/customers", this.customerService::Create, this.jsonService::toJson);
+	}
 	
 	public static void main(String[] args) {
-	
+		
+		Injector injector = Guice.createInjector(new ApplicationModule());
+		Application application = injector.getInstance(Application.class);
+		application.run();
+		
+		/*
 		port(8080);
 		
 		//=================================================INICIO (CUSTOMER)=======================================================//
@@ -328,6 +362,7 @@ public class Application {
 		    apiError.setDescription("Erro Interno do Servidor!");
 		    return JsonParsing.ObjectToJson(apiError);
 		});
+		*/
 	}
 
 }

@@ -1,24 +1,26 @@
-package com.customer.services;
+package com.customer.validation;
 
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.customer.dto.ApiError;
-import com.customer.interfaces.Validation;
+import com.customer.dto.CustomerFilter;
+import com.customer.services.ApiError;
 import com.fasterxml.jackson.databind.JsonNode;
 
-public class CustomerFilterValidation implements Validation {
+import spark.Request;
+
+public class CustomerFilterValidationImpl implements CustomerFilterValidation {
 
 	ApiError apiError;
 	
 	@Override
-	public ApiError validate(String requestBody) throws IOException {
-		apiError = new ApiError();
+	public CustomerFilter validate(Request request){/*
+		apiError = null;
 		JsonNode node;
 		
 		try {
-			node = JsonParsing.StringToJson(requestBody);
+			node = JsonServiceImpl.StringToJson(requestBody);
 		}catch (Exception e) {
 			apiError.setCode("json_format");
 			apiError.setDescription("Falha, Json do corpo da requisição Inválido.");
@@ -66,7 +68,7 @@ public class CustomerFilterValidation implements Validation {
         		}
         	}
         }
-		
+		*/
         return null;
 	}
 	

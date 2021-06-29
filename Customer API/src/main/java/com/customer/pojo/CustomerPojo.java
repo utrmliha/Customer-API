@@ -1,19 +1,33 @@
 package com.customer.pojo;
 
 public class CustomerPojo {
-	private Integer id;
+	private Long id;
 	private String name;
 	private String email;
 	private String birthDate;
 	private String cpf;
 	private String gender;
 	private AddressPojo address;
-		
+	private String createdAt;
+	private String updateAt;
+	
+	public String getCreatedAt() {
+		return createdAt;
+	}
+	public void setCreatedAt(String createdAt) {
+		this.createdAt = createdAt;
+	}
+	public String getUpdateAt() {
+		return updateAt;
+	}
+	public void setUpdateAt(String updateAt) {
+		this.updateAt = updateAt;
+	}
 	public void setGender(String gender) {
 		this.gender = gender.toUpperCase();
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -61,7 +75,7 @@ public class CustomerPojo {
 		this.address = address;
 	}
 	
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 }

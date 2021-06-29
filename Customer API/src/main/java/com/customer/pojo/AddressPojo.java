@@ -1,7 +1,7 @@
 package com.customer.pojo;
 
 public class AddressPojo {
-	private Integer id;
+	private Long id;
 	private String state;
 	private String city;
 	private String neighborhood;
@@ -10,20 +10,20 @@ public class AddressPojo {
 	private String number;
 	private String additionalInformation;
 	private Boolean main;
-	private Integer customer_id;
+	private Long customer_id;
 	
-	public Integer getCustomer_id() {
+	public Long getCustomer_id() {
 		return customer_id;
 	}
 	
-	public void setCustomer_id(Integer customer_id) {
+	public void setCustomer_id(Long customer_id) {
 		this.customer_id = customer_id;
 	}
 	
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getState() {

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Customer {
-	private Integer id;
+	private Long id;
 	private String uuid;
 	private String name;
 	private String email;
@@ -17,26 +17,11 @@ public class Customer {
 	private String createdAt;
 	private String updateAt; 
 	
-	@ConstructorProperties({"id", "uuid", "name", "email", "birthDate", "cpf", "gender", "createdAt", "updateAt"})
-	public Customer(Integer id, String uuid, String name, String email, String birthDate, String cpf, String gender,
-			String createdAt, String updateAt) {
-		super();
-		this.id = id;
-		this.uuid = uuid;
-		this.name = name;
-		this.email = email;
-		this.birthDate = birthDate;
-		this.cpf = cpf;
-		this.gender = gender;
-		this.createdAt = createdAt;
-		this.updateAt = updateAt;
-	}
-
 	public void setGender(String gender) {
 		this.gender = gender.toUpperCase();
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -117,7 +102,7 @@ public class Customer {
 		return gender;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

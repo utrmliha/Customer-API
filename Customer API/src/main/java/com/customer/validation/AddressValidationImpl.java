@@ -1,26 +1,30 @@
-package com.customer.services;
+package com.customer.validation;
 
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.customer.dto.ApiError;
-import com.customer.interfaces.Validation;
+import com.customer.dto.Address;
+import com.customer.services.ApiError;
+import com.customer.services.JsonServiceImpl;
 import com.fasterxml.jackson.databind.JsonNode;
 
-public class AddressValidation implements Validation{
+import spark.Request;
+
+public class AddressValidationImpl implements AddressValidation{
 
 	ApiError apiError;
 	
 	//simples validação de dados
 	@Override
-	public ApiError validate(String requestBody) throws IOException {
-		apiError = new ApiError();
+	public Address validate(Request request) throws IOException {
+		/*
+		apiError = null;
 		JsonNode node;
 		
 		if(!ExistAddressOnCustomer(requestBody)) {
 			if(ExistAddressOnRequestBody(requestBody)) {
-				node = JsonParsing.StringToJson(requestBody);
+				node = JsonServiceImpl.StringToJson(requestBody);
 			}else {
 				apiError.setCode("json_format");
 				apiError.setDescription("Falha, Json do corpo da requisição Inválido.");
@@ -28,7 +32,7 @@ public class AddressValidation implements Validation{
 				return apiError;
 			}
 		}else {
-			node = JsonParsing.StringToJson(requestBody).findValues("address").get(0);
+			node = JsonServiceImpl.StringToJson(requestBody).findValues("address").get(0);
 		}
 		
 		Pattern regexPattern = null;
@@ -106,13 +110,13 @@ public class AddressValidation implements Validation{
 			apiError.setDescription("Endereço principal(main) inválido, considere 'true' ou 'false'.");
 			
 			return apiError;
-		}
+		}*/
 		return null;
 				
 	}
 	
 	public boolean ExistAddressOnRequestBody(String requestBody) throws IOException{
-		JsonNode node = JsonParsing.StringToJson(requestBody);
+		JsonNode node = JsonServiceImpl.StringToJson(requestBody);
 		if(node.findValue("state") != null) {
 			return true;
 		}else if (node.findValue("city") != null) {
@@ -136,7 +140,7 @@ public class AddressValidation implements Validation{
 
 	public boolean ExistAddressOnCustomer(String requestBody) throws IOException{
 		try {
-			if(JsonParsing.StringToJson(requestBody).findValues("address").get(0).size() > 0) {
+			if(JsonServiceImpl.StringToJson(requestBody).findValues("address").get(0).size() > 0) {
 				return true;
 			}else {
 				return false;
