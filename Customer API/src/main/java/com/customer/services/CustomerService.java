@@ -12,26 +12,14 @@ import spark.Response;
 
 public interface CustomerService {
 	
-	public Customer Create(Request request, Response response);
+	public Customer criar(Request request, Response response);
 	
-	public ApiError Update(CustomerPojo customerPojo);
+	public List<Customer> listar(Request request, Response response);
 	
-	public ApiError DeleteById(int id);
+	public Customer buscar(Request request, Response response);
 	
-	public boolean ExistCustomerMainAddress(int customer_id);
+	public Customer atualizar(Request request, Response response);
 	
-	public boolean ExistCustomerAddress(int customer_id);
-	
-	public boolean ExistById(int id);
-	
-	public boolean ExistByCpf(String cpf);
-	
-	public List<Customer> FindAllWithFilter(CustomerFilter customerFilter) throws IOException;
-	
-	public List<Customer> FindAllNoFilter();
-	
-	public Customer FindById(int id);
-	
-	public Customer FindByCpf(String cpf);
-
+	public Customer deletar(Request request, Response response);
+		
 }

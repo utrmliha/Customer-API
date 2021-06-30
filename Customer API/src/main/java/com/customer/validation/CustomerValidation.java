@@ -9,5 +9,5 @@ import com.customer.services.ApiError;
 import spark.Request;
 
 public interface CustomerValidation {
-	public CustomerPojo validate(Request request) throws IOException;
+	public CustomerPojo validate (Request request) throws IOException;
 }

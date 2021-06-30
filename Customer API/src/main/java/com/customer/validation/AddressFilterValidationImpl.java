@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.customer.dto.AddressFilter;
+import com.customer.filter.AddressFilter;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import spark.Request;

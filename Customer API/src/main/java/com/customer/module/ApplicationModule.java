@@ -7,14 +7,16 @@ import com.customer.dao.DaoAddressImpl;
 import com.customer.dao.DaoCustomer;
 import com.customer.dao.DaoCustomerImpl;
 import com.customer.jdbi.MySQLConnectionImpl;
+import com.customer.services.AddressFilterService;
+import com.customer.services.AddressFilterServiceImpl;
 import com.customer.services.AddressService;
 import com.customer.services.AddressServiceImpl;
+import com.customer.services.CustomerFilterService;
+import com.customer.services.CustomerFilterServiceImpl;
 import com.customer.services.CustomerService;
 import com.customer.services.CustomerServiceImpl;
 import com.customer.services.JsonService;
 import com.customer.services.JsonServiceImpl;
-import com.customer.services.PojoToModel;
-import com.customer.services.PojoToModelImpl;
 import com.customer.validation.AddressFilterValidation;
 import com.customer.validation.AddressFilterValidationImpl;
 import com.customer.validation.AddressValidation;
@@ -32,19 +34,23 @@ public class ApplicationModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(JsonService.class).to(JsonServiceImpl.class);
-		bind(PojoToModel.class).to(PojoToModelImpl.class);
-		
 		bind(CustomerValidation.class).to(CustomerValidationImpl.class);
 		bind(CustomerFilterValidation.class).to(CustomerFilterValidationImpl.class);
+		
 		bind(AddressValidation.class).to(AddressValidationImpl.class);
 		bind(AddressFilterValidation.class).to(AddressFilterValidationImpl.class);
 		
 		bind(CustomerService.class).to(CustomerServiceImpl.class);
+		bind(CustomerFilterService.class).to(CustomerFilterServiceImpl.class);
+		
 		bind(AddressService.class).to(AddressServiceImpl.class);
+		bind(AddressFilterService.class).to(AddressFilterServiceImpl.class);
+		
+		bind(JsonService.class).to(JsonServiceImpl.class);
 		
 		bind(DaoCustomer.class).to(DaoCustomerImpl.class).in(Singleton.class);
 		bind(DaoAddress.class).to(DaoAddressImpl.class).in(Singleton.class);
+		
 	}
 	
 	@Provides

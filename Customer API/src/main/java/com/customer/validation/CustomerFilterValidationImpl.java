@@ -4,18 +4,25 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.customer.dto.CustomerFilter;
+import com.customer.filter.CustomerFilter;
 import com.customer.services.ApiError;
+import com.customer.services.JsonService;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.inject.Inject;
 
 import spark.Request;
 
 public class CustomerFilterValidationImpl implements CustomerFilterValidation {
 
 	ApiError apiError;
+	@Inject
+	JsonService jsonService;
 	
 	@Override
-	public CustomerFilter validate(Request request){/*
+	public CustomerFilter validate(Request request){
+		CustomerFilter customerFilter = jsonService.fromJson(request.body(), CustomerFilter.class);
+		
+		/*
 		apiError = null;
 		JsonNode node;
 		
@@ -69,7 +76,7 @@ public class CustomerFilterValidationImpl implements CustomerFilterValidation {
         	}
         }
 		*/
-        return null;
+		return customerFilter;
 	}
 	
 }

@@ -1,6 +1,6 @@
 package com.customer.validation;
 
-import com.customer.dto.CustomerFilter;
+import com.customer.filter.CustomerFilter;
 
 import spark.Request;
 

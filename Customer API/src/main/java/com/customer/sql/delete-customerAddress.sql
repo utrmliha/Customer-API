@@ -1,0 +1,1 @@
+DELETE FROM address WHERE customer_id = :customer_id

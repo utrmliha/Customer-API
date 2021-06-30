@@ -1,0 +1,1 @@
+SELECT c.id as c_id, a.id as a_id FROM customer c INNER JOIN address a on a.customer_id = c.id WHERE 

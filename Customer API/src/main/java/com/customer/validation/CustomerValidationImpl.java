@@ -10,7 +10,6 @@ import com.customer.dto.Customer;
 import com.customer.pojo.CustomerPojo;
 import com.customer.services.ApiError;
 import com.customer.services.JsonService;
-import com.customer.services.PojoToModel;
 import com.fasterxml.jackson.databind.*;
 import com.google.inject.Inject;
 
@@ -21,8 +20,6 @@ public class CustomerValidationImpl implements CustomerValidation{
 	ApiError apiError;//EXCLUIR
 	@Inject
 	JsonService jsonService;
-	@Inject
-	PojoToModel PojoToModel;
 	
 	//simples validação de dados
 	@Override
@@ -32,7 +29,7 @@ public class CustomerValidationImpl implements CustomerValidation{
 		try {
 			customerPojo = jsonService.fromJson(request.body(), CustomerPojo.class);
 		}catch (Exception e) {
-			System.out.println("Json Inválido.");
+			//RETORNA ERROR JSON INVÁLIDO
 		}
 		
 		Pattern regexPattern = null;

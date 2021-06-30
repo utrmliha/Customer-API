@@ -1,0 +1,1 @@
+SELECT IF(EXISTS(SELECT id FROM customer WHERE id = :id), 1, 0)
