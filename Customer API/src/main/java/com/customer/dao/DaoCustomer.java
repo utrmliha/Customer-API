@@ -3,7 +3,6 @@ package com.customer.dao;
 import java.util.List;
 
 import com.customer.dto.Customer;
-import com.customer.filter.CustomerFilter;
 import com.customer.pojo.CustomerPojo;
 
 public interface DaoCustomer {

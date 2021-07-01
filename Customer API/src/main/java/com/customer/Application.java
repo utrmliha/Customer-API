@@ -3,8 +3,6 @@ package com.customer;
 import com.customer.dao.DaoAddress;
 import com.customer.dao.DaoCustomer;
 import com.customer.module.ApplicationModule;
-import com.customer.pojo.AddressPojo;
-import com.customer.pojo.CustomerPojo;
 import com.customer.services.AddressFilterService;
 import com.customer.services.AddressService;
 import com.customer.services.CustomerFilterService;
@@ -83,7 +81,6 @@ public class Application {
 	}
 	
 	public static void main(String[] args) {
-		
 		System.out.println("Iniciando Aplicação...");
 		
 		Injector injector = Guice.createInjector(new ApplicationModule());
@@ -92,13 +89,6 @@ public class Application {
 		application.run();
 		
 		System.out.println("Aplicação Iniciada com sucesso!");
-		/*
-		post("/customers/:id/addresses", this.addressService::criar, this.jsonService::toJson);
-		get("/customers/:id/addresses", this.addressService::listar, this.jsonService::toJson);
-		get("/customers/:id/addresses/:address_id", this.addressService::buscar, this.jsonService::toJson);
-		put("/customers/:id/addresses/:address_id", this.addressService::atualizar, this.jsonService::toJson);
-		delete("/customers/:id/addresses/:address_id", this.addressService::deletar, this.jsonService::toJson);
-		*/
 	}
 	
 }

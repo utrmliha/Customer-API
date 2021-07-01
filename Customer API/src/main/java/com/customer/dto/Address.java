@@ -1,7 +1,5 @@
 package com.customer.dto;
 
-import java.beans.ConstructorProperties;
-
 public class Address {
 	private Long id;
 	private String state;

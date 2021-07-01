@@ -1,13 +1,8 @@
 package com.customer.validation;
 
-import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.customer.filter.AddressFilter;
-import com.customer.filter.CustomerFilter;
 import com.customer.services.JsonService;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.google.inject.Inject;
 

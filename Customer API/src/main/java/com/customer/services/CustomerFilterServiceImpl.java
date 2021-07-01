@@ -7,6 +7,7 @@ import org.jdbi.v3.core.locator.ClasspathSqlLocator;
 
 import com.customer.filter.CustomerFilter;
 
+@SuppressWarnings("deprecation")
 public class CustomerFilterServiceImpl implements CustomerFilterService{
 
 	@Override

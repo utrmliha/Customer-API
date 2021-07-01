@@ -1,21 +1,11 @@
 package com.customer.services;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.jdbi.v3.core.Handle;
-import org.jdbi.v3.core.Jdbi;
-import org.jdbi.v3.core.locator.ClasspathSqlLocator;
-import org.jdbi.v3.core.mapper.reflect.ConstructorMapper;
-
 import com.customer.dao.DaoCustomer;
-import com.customer.dto.Address;
-import com.customer.dto.Customer_InnerJoin_Address;
 import com.customer.dto.Customer;
 import com.customer.filter.CustomerFilter;
-import com.customer.jdbi.MySQLConnectionImpl;
 import com.customer.pojo.CustomerPojo;
 import com.customer.validation.CustomerFilterValidation;
 import com.customer.validation.CustomerValidation;
@@ -23,8 +13,6 @@ import com.google.inject.Inject;
 
 import spark.Request;
 import spark.Response;
-
-import java.time.format.DateTimeFormatter;
 
 public class CustomerServiceImpl implements CustomerService{
 	
@@ -34,8 +22,6 @@ public class CustomerServiceImpl implements CustomerService{
 	private CustomerFilterValidation customerFilterValidation;
 	@Inject
 	private CustomerFilterService customerFilterService;
-	@Inject
-	private Jdbi jdbi;
 	@Inject
 	private DaoCustomer daoCustomer;
 	

@@ -3,9 +3,6 @@ package com.customer.services;
 import java.util.List;
 
 import com.customer.dto.Address;
-import com.customer.dto.Customer;
-import com.customer.filter.AddressFilter;
-import com.customer.pojo.AddressPojo;
 
 import spark.Request;
 import spark.Response;

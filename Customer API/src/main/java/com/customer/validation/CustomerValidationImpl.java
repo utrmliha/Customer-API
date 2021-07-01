@@ -1,16 +1,7 @@
 package com.customer.validation;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.customer.dto.Customer;
 import com.customer.pojo.CustomerPojo;
-import com.customer.services.ApiError;
 import com.customer.services.JsonService;
-import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.google.inject.Inject;
 
@@ -18,7 +9,6 @@ import spark.Request;
 
 public class CustomerValidationImpl implements CustomerValidation{
 	
-	ApiError apiError;//EXCLUIR
 	@Inject
 	JsonService jsonService;
 	
@@ -37,12 +27,13 @@ public class CustomerValidationImpl implements CustomerValidation{
 			}
 		}
 		
+		/*
 		Pattern regexPattern = null;
         Matcher regMatcher = null;
 
 		if(customerPojo.getName() == null || customerPojo.getName().isBlank()) {
 			System.out.println("Nome(name) do cliente é um campo obrigatório.");
-		}/*else{
+		}else{
 			regexPattern = Pattern.compile("([0-9])");
 	        regMatcher = regexPattern.matcher(node.get("name").asText());
 	        

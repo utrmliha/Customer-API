@@ -1,11 +1,8 @@
 package com.customer.services;
 
-import java.io.IOException;
 import java.util.List;
 
 import com.customer.dto.Customer;
-import com.customer.filter.CustomerFilter;
-import com.customer.pojo.CustomerPojo;
 
 import spark.Request;
 import spark.Response;

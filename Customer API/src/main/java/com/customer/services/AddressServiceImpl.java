@@ -1,17 +1,10 @@
 package com.customer.services;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import org.jdbi.v3.core.Handle;
-import org.jdbi.v3.core.Jdbi;
-import org.jdbi.v3.core.mapper.reflect.ConstructorMapper;
 
 import com.customer.dao.DaoAddress;
 import com.customer.dto.Address;
-import com.customer.dto.Customer;
 import com.customer.filter.AddressFilter;
-import com.customer.filter.CustomerFilter;
 import com.customer.pojo.AddressPojo;
 import com.customer.validation.AddressFilterValidation;
 import com.customer.validation.AddressValidation;
@@ -28,8 +21,6 @@ public class AddressServiceImpl implements AddressService{
 	private AddressFilterValidation addressFilterValidation;
 	@Inject
 	private AddressFilterService addressFilterService;
-	@Inject
-	private Jdbi jdbi;
 	@Inject
 	private DaoAddress daoAddress;
 	

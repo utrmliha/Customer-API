@@ -1,13 +1,8 @@
 package com.customer.validation;
 
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import com.customer.dto.Address;
 import com.customer.pojo.AddressPojo;
-import com.customer.pojo.CustomerPojo;
-import com.customer.services.ApiError;
 import com.customer.services.JsonService;
 import com.customer.services.JsonServiceImpl;
 import com.fasterxml.jackson.databind.JsonNode;

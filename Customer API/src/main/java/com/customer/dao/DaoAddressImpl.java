@@ -6,11 +6,11 @@ import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.locator.ClasspathSqlLocator;
 
 import com.customer.dto.Address;
-import com.customer.jdbi.JdbiConnection;
 import com.customer.mapper.AddressMapper;
 import com.customer.pojo.AddressPojo;
 import com.google.inject.Inject;
 
+@SuppressWarnings("deprecation")
 public class DaoAddressImpl implements DaoAddress{
 
 	@Inject

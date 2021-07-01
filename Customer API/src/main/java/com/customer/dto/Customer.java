@@ -1,6 +1,5 @@
 package com.customer.dto;
 
-import java.beans.ConstructorProperties;
 import java.util.ArrayList;
 import java.util.List;
 

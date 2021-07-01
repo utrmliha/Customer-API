@@ -7,6 +7,7 @@ import org.jdbi.v3.core.locator.ClasspathSqlLocator;
 
 import com.customer.filter.AddressFilter;
 
+@SuppressWarnings("deprecation")
 public class AddressFilterServiceImpl implements AddressFilterService{
 
 	@Override

@@ -5,7 +5,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.locator.ClasspathSqlLocator;
 
@@ -18,6 +17,7 @@ import com.customer.mapper.Customer_InnerJoin_AddressMapper;
 import com.customer.pojo.CustomerPojo;
 import com.google.inject.Inject;
 
+@SuppressWarnings("deprecation")
 public class DaoCustomerImpl implements DaoCustomer{
 	
 	@Inject
