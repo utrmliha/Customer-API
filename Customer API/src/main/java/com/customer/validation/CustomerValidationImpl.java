@@ -29,7 +29,7 @@ public class CustomerValidationImpl implements CustomerValidation{
 		try {
 			customerPojo = jsonService.fromJson(request.body(), CustomerPojo.class);
 		}catch (Exception e) {
-			//RETORNA ERROR JSON INVÁLIDO
+			System.out.println("json inválido");//RETORNA ERROR JSON INVÁLIDO
 		}
 		
 		Pattern regexPattern = null;

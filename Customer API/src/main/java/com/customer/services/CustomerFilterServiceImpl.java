@@ -12,7 +12,7 @@ public class CustomerFilterServiceImpl implements CustomerFilterService{
 	@Override
 	public String montarSqlComFiltro(CustomerFilter customerFilter) {
 		//==================Personalizando a Query
-		String Query = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.select-filterCustomer");
+		String Query = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.innerJoin-filteredCustomersAndAddresses.sql");
 		List<String> filtrarPor = new ArrayList<String>();
 
 		if(customerFilter.getName() == null || customerFilter.getName().isBlank()) {

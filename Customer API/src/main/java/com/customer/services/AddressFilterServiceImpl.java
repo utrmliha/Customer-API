@@ -12,7 +12,7 @@ public class AddressFilterServiceImpl implements AddressFilterService{
 	@Override
 	public String montarSqlComFiltro(AddressFilter addressFilter) {
 		//==================Personalizando a Query
-		String Query = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.select-filterAddress");
+		String Query = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.select-filteredAddresses");
 		List<String> filtrarPor = new ArrayList<String>();
 		
 		if(addressFilter.getId() == null || addressFilter.getId() < 1) {

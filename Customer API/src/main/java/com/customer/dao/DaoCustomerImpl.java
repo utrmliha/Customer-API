@@ -100,7 +100,7 @@ public class DaoCustomerImpl implements DaoCustomer{
 		
 		//==============Buscando os Adresses dos customers
 		for (Customer customer : customers) {
-			String sql2 = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.select-customerAdresses");
+			String sql2 = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.select-commonCustomerAddress");
 			
 			List<Address> adresses = jdbi.withHandle(handle -> 
 						handle.createQuery(sql2)
@@ -198,7 +198,7 @@ public class DaoCustomerImpl implements DaoCustomer{
 		.map(new CustomerMapper()).one());
 		
 		//============Buscando e setando Adresses
-		String sql2 = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.select-customerAdresses");
+		String sql2 = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.select-allCustomerAddresses");
 		
 		List<Address> adresses = jdbi.withHandle(handle ->
 				handle.createQuery(sql2)
@@ -227,33 +227,43 @@ public class DaoCustomerImpl implements DaoCustomer{
 			
 			jdbi.withHandle(handle ->
 				handle.createUpdate(sql1)
-				.bind(0, customerPojo.getName())
-				.bind(1, customerPojo.getEmail())
-				.bind(2, customerPojo.getBirthDate())
-				.bind(3, customerPojo.getCpf())
-				.bind(4, customerPojo.getGender())
-				.bind(5, customerPojo.getUpdateAt())
-				.bind(6, customerPojo.getId())
+				.bind("name", customerPojo.getName())
+				.bind("email", customerPojo.getEmail())
+				.bind("birthDate", customerPojo.getBirthDate())
+				.bind("cpf", customerPojo.getCpf())
+				.bind("gender", customerPojo.getGender())
+				.bind("updateAt", customerPojo.getUpdateAt())
+				.bind("id", customerPojo.getId())
 				.execute());
 					
 			return buscar(customerPojo.getId());
 			
 		}else {
 			if(customerPojo.getAddress().getMain()) {
-				String sql2 = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.update-mainAddress");
+				String sql2 = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.select-selectIfMainAddressExists");
 				
-				jdbi.withHandle(handle ->
-				handle.createUpdate(sql2)
-				.bind("state", customerPojo.getAddress().getState())
-				.bind("city", customerPojo.getAddress().getCity())
-				.bind("neighborhood", customerPojo.getAddress().getNeighborhood())
-				.bind("zipCode", customerPojo.getAddress().getZipCode())
-				.bind("street", customerPojo.getAddress().getStreet())
-				.bind("number", customerPojo.getAddress().getNumber())
-				.bind("additionalInformation", customerPojo.getAddress().getAdditionalInformation())
-				.bind("customer_id", customerPojo.getId())
-				.bind("main", customerPojo.getAddress().getMain())
-				.execute());
+				boolean existMainAddress = jdbi.withHandle(handle ->
+						handle.createQuery(sql2).bind("customer_id", customerPojo.getId()).mapTo(boolean.class).one());
+				
+				if(existMainAddress) {
+					String sql3 = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.update-mainAddress");
+					
+					jdbi.withHandle(handle ->
+					handle.createUpdate(sql3)
+					.bind("state", customerPojo.getAddress().getState())
+					.bind("city", customerPojo.getAddress().getCity())
+					.bind("neighborhood", customerPojo.getAddress().getNeighborhood())
+					.bind("zipCode", customerPojo.getAddress().getZipCode())
+					.bind("street", customerPojo.getAddress().getStreet())
+					.bind("number", customerPojo.getAddress().getNumber())
+					.bind("additionalInformation", customerPojo.getAddress().getAdditionalInformation())
+					.bind("customer_id", customerPojo.getId())
+					.bind("main", customerPojo.getAddress().getMain())
+					.execute());
+				}else {
+					System.out.println("Customer não possui MainAddress para ser atualizado");
+				}
+				
 			}
 			return buscar(customerPojo.getId());
 		}
@@ -262,16 +272,16 @@ public class DaoCustomerImpl implements DaoCustomer{
 	@Override
 	public void deletar(Long id) {
 		//DELETA Adresses do Customer
-		String sql1 = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.delete-customer");
+		String sql1 = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.delete-customerAddress");
 		jdbi.withHandle(handle -> 
-			handle.createScript(sql1)
+			handle.createUpdate(sql1)
 			.bind("customer_id", id)
 			.execute());
 		
 		//DELETA Customer
-		String sql2 = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.delete-customerAddress");
+		String sql2 = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.delete-customer");
 		jdbi.withHandle(handle -> 
-		handle.createScript(sql2)
+		handle.createUpdate(sql2)
 		.bind("id", id)
 		.execute());
 		

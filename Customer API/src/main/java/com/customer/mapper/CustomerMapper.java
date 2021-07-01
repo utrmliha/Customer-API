@@ -13,7 +13,7 @@ public class CustomerMapper implements RowMapper<Customer>{
 	@Override
 	public Customer map(ResultSet rs, StatementContext ctx) throws SQLException {
 		Customer customer = new Customer();
-		customer.setId(Long.parseLong(rs.getString("id")));
+		customer.setId(rs.getLong("id"));
 		customer.setUuid(rs.getString("uuid"));
 		customer.setName(rs.getString("name"));
 		customer.setEmail(rs.getString("email"));
