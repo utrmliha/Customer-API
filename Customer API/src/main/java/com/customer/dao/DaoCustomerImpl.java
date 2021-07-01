@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.locator.ClasspathSqlLocator;
 
@@ -93,7 +94,7 @@ public class DaoCustomerImpl implements DaoCustomer{
 		String sql1 = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.select-allCustomers");
 		
 		//==============Buscando customers
-		List<Customer> customers = jdbi.withHandle(handle ->
+		List<Customer> customers = jdbi.withHandle(handle -> 
 					handle.createQuery(sql1)
 					.map(new CustomerMapper()).list());
 		
@@ -101,22 +102,28 @@ public class DaoCustomerImpl implements DaoCustomer{
 		for (Customer customer : customers) {
 			String sql2 = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.select-customerAdresses");
 			
-			List<Address> adresses = jdbi.withHandle(handle ->
-						handle.createQuery(sql2))
+			List<Address> adresses = jdbi.withHandle(handle -> 
+						handle.createQuery(sql2)
 						.bind("customer_id", customer.getId())
-						.map(new AddressMapper()).list();
+						.map(new AddressMapper()).list());
 			
 			String sql3 = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.select-customerMainAddress");
 			
-			Address mainAddress = jdbi.withHandle(handle ->
-						handle.createQuery(sql3))
+			Address mainAddress = null;
+			try {
+				mainAddress = jdbi.withHandle(handle -> 
+						handle.createQuery(sql3)
 						.bind("customer_id", customer.getId())
-						.map(new AddressMapper()).one();
+						.map(new AddressMapper()).one());
+			}catch (Exception e) {
+				if(e instanceof IllegalStateException){//Se não encontrar nenhum registro ele ignora o erro
+				}else 
+					e.printStackTrace();
+			}
 			
 			customer.setMainAddress(mainAddress);
 			customer.setAdresses(adresses);
 		}
-		
 		return customers;
 	}
 
@@ -137,7 +144,7 @@ public class DaoCustomerImpl implements DaoCustomer{
 		//============================INICIO- Montando a lista de Customer===============================//
 		Long lastCustomerId = 0L;
 		int indexCustomer = -1;
-		List<Customer> customers = null;
+		List<Customer> customers = new ArrayList<Customer>();
 		String sqlCustomerTemp = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.select-customer");
 		String sqlAddressTemp = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.select-address");
 		
