@@ -1,0 +1,1 @@
+SELECT IF(EXISTS(SELECT id FROM address WHERE customer_id = :customer_id AND main = true), 1, 0)
