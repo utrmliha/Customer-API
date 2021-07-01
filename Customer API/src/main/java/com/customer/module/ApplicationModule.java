@@ -1,11 +1,13 @@
 package com.customer.module;
 
+import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 
 import com.customer.dao.DaoAddress;
 import com.customer.dao.DaoAddressImpl;
 import com.customer.dao.DaoCustomer;
 import com.customer.dao.DaoCustomerImpl;
+import com.customer.jdbi.JdbiConnection;
 import com.customer.jdbi.MySQLConnectionImpl;
 import com.customer.services.AddressFilterService;
 import com.customer.services.AddressFilterServiceImpl;
@@ -64,6 +66,6 @@ public class ApplicationModule extends AbstractModule {
 	@Singleton
 	public Jdbi jdbi() {
 		MySQLConnectionImpl mySQLConnectionImpl = new MySQLConnectionImpl();
-		return mySQLConnectionImpl.getJdbi();
+		return mySQLConnectionImpl.conectar("jdbc:mysql://localhost:3306/mydbcustomers", "root", "admin");
 	}
 }
