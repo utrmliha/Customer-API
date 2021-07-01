@@ -55,11 +55,11 @@ public class CustomerServiceImpl implements CustomerService{
 	@Override
 	public List<Customer> listar(Request request, Response response) {
 		List<Customer> customers = null;
+		CustomerFilter customerFilter = null;
 		
-		if(request.body() == null) {
+		if((customerFilter = customerFilterValidation.validate(request)) == null) {
 			customers = daoCustomer.listar();
 		}else {
-			CustomerFilter customerFilter = customerFilterValidation.validate(request);
 			String sql = customerFilterService.montarSqlComFiltro(customerFilter);
 			customers = daoCustomer.listarComFiltro(sql);
 		}

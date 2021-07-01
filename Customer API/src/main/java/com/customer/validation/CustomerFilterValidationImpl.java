@@ -8,6 +8,7 @@ import com.customer.filter.CustomerFilter;
 import com.customer.services.ApiError;
 import com.customer.services.JsonService;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.google.inject.Inject;
 
 import spark.Request;
@@ -20,7 +21,16 @@ public class CustomerFilterValidationImpl implements CustomerFilterValidation {
 	
 	@Override
 	public CustomerFilter validate(Request request){
-		CustomerFilter customerFilter = jsonService.fromJson(request.body(), CustomerFilter.class);
+		CustomerFilter customerFilter = null;
+		try {
+			customerFilter = jsonService.fromJson(request.body(), CustomerFilter.class);
+		}catch (Exception e) {
+			if(e instanceof MismatchedInputException) {
+				return null;
+			}else {
+				e.printStackTrace();
+			}
+		}
 		
 		/*
 		apiError = null;
