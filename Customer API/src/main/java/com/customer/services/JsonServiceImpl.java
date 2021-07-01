@@ -44,25 +44,13 @@ public class JsonServiceImpl implements JsonService{
     //EXCLUIR FIM
 
 	@Override
-	public <T> T fromJson(String json, Class<T> classType) {
-		try {
-			return mapper.readValue(json, classType);
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		return null;
+	public <T> T fromJson(String json, Class<T> classType) throws JsonMappingException, JsonProcessingException {
+		return mapper.readValue(json, classType);
 	}
 
 	@Override
-	public String toJson(Object T){
-		try {
-			return mapper.writeValueAsString(T);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		return null;
+	public String toJson(Object T) throws JsonProcessingException{
+		return mapper.writeValueAsString(T);
 	}
    
 }

@@ -13,8 +13,8 @@ public class Customer_InnerJoin_AddressMapper implements RowMapper<Customer_Inne
 	@Override
 	public Customer_InnerJoin_Address map(ResultSet rs, StatementContext ctx) throws SQLException {
 		Customer_InnerJoin_Address CIJAMapper = new Customer_InnerJoin_Address();
-		CIJAMapper.setA_id(Long.parseLong("a_id"));
-		CIJAMapper.setC_id(Long.parseLong("c_id"));
+		CIJAMapper.setA_id(rs.getLong("a_id"));
+		CIJAMapper.setC_id(rs.getLong("c_id"));
 		return CIJAMapper;
 	}
 
