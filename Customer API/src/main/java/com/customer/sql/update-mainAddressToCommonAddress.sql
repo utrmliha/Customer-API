@@ -1,0 +1,1 @@
+UPDATE address SET main = false WHERE main = true AND customer_id = :customer_id
