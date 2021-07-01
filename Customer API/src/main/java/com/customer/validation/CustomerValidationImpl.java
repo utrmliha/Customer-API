@@ -11,6 +11,7 @@ import com.customer.pojo.CustomerPojo;
 import com.customer.services.ApiError;
 import com.customer.services.JsonService;
 import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.google.inject.Inject;
 
 import spark.Request;
@@ -29,7 +30,11 @@ public class CustomerValidationImpl implements CustomerValidation{
 		try {
 			customerPojo = jsonService.fromJson(request.body(), CustomerPojo.class);
 		}catch (Exception e) {
-			System.out.println("json inválido");//RETORNA ERROR JSON INVÁLIDO
+			if(e instanceof MismatchedInputException) {
+				return null;
+			}else {
+				e.printStackTrace();
+			}
 		}
 		
 		Pattern regexPattern = null;

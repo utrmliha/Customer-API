@@ -28,7 +28,7 @@ public class CustomerFilterValidationImpl implements CustomerFilterValidation {
 			if(e instanceof MismatchedInputException) {
 				return null;
 			}else {
-				e.printStackTrace();
+				e.printStackTrace();//ERRO JSON INVÁLIDO
 			}
 		}
 		

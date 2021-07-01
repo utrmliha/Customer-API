@@ -12,6 +12,5 @@ public interface DaoCustomer {
 	public List<Customer> listarComFiltro(String sql);
 	public Customer buscar(Long id);
 	public Customer atualizar(CustomerPojo customerPojo);
-	public void deletar(Long id);
-	public boolean customerExiste(Long id);
+	public boolean deletar(Long id);
 }

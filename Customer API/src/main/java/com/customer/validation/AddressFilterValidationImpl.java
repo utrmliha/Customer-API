@@ -5,14 +5,31 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.customer.filter.AddressFilter;
+import com.customer.filter.CustomerFilter;
+import com.customer.services.JsonService;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import com.google.inject.Inject;
 
 import spark.Request;
 
 public class AddressFilterValidationImpl implements AddressFilterValidation{
 
+	@Inject
+	JsonService jsonService;
+	
 	@Override
 	public AddressFilter validate(Request request){
+		AddressFilter addressFilter = null;
+		try {
+			addressFilter = jsonService.fromJson(request.body(), AddressFilter.class);
+		}catch (Exception e) {
+			if(e instanceof MismatchedInputException) {
+				return null;
+			}else {
+				e.printStackTrace();//ERRO JSON INVÁLIDO
+			}
+		}
 		/*
 		ApiError apiError = null;
 		JsonNode node;
@@ -105,7 +122,7 @@ public class AddressFilterValidationImpl implements AddressFilterValidation{
         		return apiError;
         	}
         }*/
-		return null;
+		return addressFilter;
 	}
 
 }

@@ -5,19 +5,37 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.customer.dto.Address;
+import com.customer.pojo.AddressPojo;
+import com.customer.pojo.CustomerPojo;
 import com.customer.services.ApiError;
+import com.customer.services.JsonService;
 import com.customer.services.JsonServiceImpl;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import com.google.inject.Inject;
 
 import spark.Request;
 
 public class AddressValidationImpl implements AddressValidation{
-
-	ApiError apiError;
+	
+	@Inject
+	JsonService jsonService;
 	
 	//simples validação de dados
 	@Override
-	public Address validate(Request request) throws IOException {
+	public AddressPojo validate(Request request) throws IOException {
+		AddressPojo addressPojo = null;
+		
+		try {
+			addressPojo = jsonService.fromJson(request.body(), AddressPojo.class);
+		}catch (Exception e) {
+			if(e instanceof MismatchedInputException) {
+				return null;
+			}else {
+				e.printStackTrace();
+			}
+		}	
+		
 		/*
 		apiError = null;
 		JsonNode node;
@@ -111,7 +129,7 @@ public class AddressValidationImpl implements AddressValidation{
 			
 			return apiError;
 		}*/
-		return null;
+		return addressPojo;
 				
 	}
 	

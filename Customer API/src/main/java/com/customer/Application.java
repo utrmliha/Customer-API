@@ -75,6 +75,11 @@ public class Application {
 		delete("/customers/:id", this.customerService::deletar, this.jsonService::toJson);
 		
 		//===============ADDRESS
+		post("/customers/:id/addresses", this.addressService::criar, this.jsonService::toJson);
+		get("/customers/:id/addresses", this.addressService::listar, this.jsonService::toJson);
+		get("/customers/:id/addresses/:address_id", this.addressService::buscar, this.jsonService::toJson);
+		put("/customers/:id/addresses/:address_id", this.addressService::atualizar, this.jsonService::toJson);
+		delete("/customers/:id/addresses/:address_id", this.addressService::deletar, this.jsonService::toJson);
 	}
 	
 	public static void main(String[] args) {

@@ -96,9 +96,9 @@ public class CustomerServiceImpl implements CustomerService{
 			//RETORNA ERROR JSON INVÁLIDO
 		}
 		
-		boolean exist = daoCustomer.customerExiste(customerPojo.getId());
-		if(exist) {
-			return daoCustomer.atualizar(customerPojo);
+		Customer customer;
+		if((customer = daoCustomer.atualizar(customerPojo)) != null) {
+			return customer;
 		}else {
 			return null;//RETORNA ERROR CUSTOMER NAO ENCONTRADO
 		}
@@ -106,11 +106,9 @@ public class CustomerServiceImpl implements CustomerService{
 
 	@Override
 	public Customer deletar(Request request, Response response) {
-
 		Long id = Long.parseLong(request.params("id"));
-		boolean exist = daoCustomer.customerExiste(id);
-		if(exist) {
-			daoCustomer.deletar(id);
+
+		if(daoCustomer.deletar(id)) {
 			return null;//RETORNA SUCESSO
 		}else {
 			return null;//RETORNA ERROR CUSTOMER NAO ENCONTRADO

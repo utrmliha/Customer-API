@@ -192,10 +192,16 @@ public class DaoCustomerImpl implements DaoCustomer{
 		//============Buscando Customer
 		String sql1 = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.select-customer");
 		
-		Customer customer = jdbi.withHandle(handle ->
-		handle.createQuery(sql1)
-		.bind("id", id)
-		.map(new CustomerMapper()).one());
+		Customer customer = null;
+		try {
+			customer = jdbi.withHandle(handle ->
+				handle.createQuery(sql1)
+				.bind("id", id)
+				.map(new CustomerMapper()).one());	
+		}catch (Exception e) {
+			if(e instanceof IllegalStateException)
+				return null;
+		}
 		
 		//============Buscando e setando Adresses
 		String sql2 = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.select-allCustomerAddresses");
@@ -219,85 +225,94 @@ public class DaoCustomerImpl implements DaoCustomer{
 	@Override
 	public Customer atualizar(CustomerPojo customerPojo) {
 		
-		if(customerPojo.getAddress() == null) {
-			String sql1 = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.update-customer");
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-			
-			customerPojo.setUpdateAt(LocalDateTime.now().format(formatter));
-			
-			jdbi.withHandle(handle ->
-				handle.createUpdate(sql1)
-				.bind("name", customerPojo.getName())
-				.bind("email", customerPojo.getEmail())
-				.bind("birthDate", customerPojo.getBirthDate())
-				.bind("cpf", customerPojo.getCpf())
-				.bind("gender", customerPojo.getGender())
-				.bind("updateAt", customerPojo.getUpdateAt())
-				.bind("id", customerPojo.getId())
-				.execute());
-					
-			return buscar(customerPojo.getId());
-			
-		}else {
-			if(customerPojo.getAddress().getMain()) {
-				String sql2 = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.select-selectIfMainAddressExists");
-				
-				boolean existMainAddress = jdbi.withHandle(handle ->
-						handle.createQuery(sql2).bind("customer_id", customerPojo.getId()).mapTo(boolean.class).one());
-				
-				if(existMainAddress) {
-					String sql3 = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.update-mainAddress");
-					
-					jdbi.withHandle(handle ->
-					handle.createUpdate(sql3)
-					.bind("state", customerPojo.getAddress().getState())
-					.bind("city", customerPojo.getAddress().getCity())
-					.bind("neighborhood", customerPojo.getAddress().getNeighborhood())
-					.bind("zipCode", customerPojo.getAddress().getZipCode())
-					.bind("street", customerPojo.getAddress().getStreet())
-					.bind("number", customerPojo.getAddress().getNumber())
-					.bind("additionalInformation", customerPojo.getAddress().getAdditionalInformation())
-					.bind("customer_id", customerPojo.getId())
-					.bind("main", customerPojo.getAddress().getMain())
-					.execute());
-				}else {
-					System.out.println("Customer não possui MainAddress para ser atualizado");
-				}
-				
-			}
-			return buscar(customerPojo.getId());
-		}
-	}
-
-	@Override
-	public void deletar(Long id) {
-		//DELETA Adresses do Customer
-		String sql1 = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.delete-customerAddress");
-		jdbi.withHandle(handle -> 
-			handle.createUpdate(sql1)
-			.bind("customer_id", id)
-			.execute());
+		String sql = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.select-IfCustomerExists");
 		
-		//DELETA Customer
-		String sql2 = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.delete-customer");
-		jdbi.withHandle(handle -> 
-		handle.createUpdate(sql2)
-		.bind("id", id)
-		.execute());
-		
-	}
-	
-	@Override
-	public boolean customerExiste(Long id) {
-		String sql = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.select-selectIfCustomerExists");
-		
-		boolean exist = jdbi.withHandle(handle ->	
+		boolean existCustomer = jdbi.withHandle(handle ->	
 				handle.createQuery(sql)
-				.bind("id", id).mapTo(boolean.class).one());
-		return exist;
+				.bind("id", customerPojo.getId()).mapTo(boolean.class).one());
+		
+		if(existCustomer) {
+			if(customerPojo.getAddress() == null) {
+				String sql1 = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.update-customer");
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+				
+				customerPojo.setUpdateAt(LocalDateTime.now().format(formatter));
+				
+				jdbi.withHandle(handle ->
+					handle.createUpdate(sql1)
+					.bind("name", customerPojo.getName())
+					.bind("email", customerPojo.getEmail())
+					.bind("birthDate", customerPojo.getBirthDate())
+					.bind("cpf", customerPojo.getCpf())
+					.bind("gender", customerPojo.getGender())
+					.bind("updateAt", customerPojo.getUpdateAt())
+					.bind("id", customerPojo.getId())
+					.execute());
+						
+				return buscar(customerPojo.getId());
+				
+			}else {
+				if(customerPojo.getAddress().getMain()) {
+					String sql2 = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.select-IfCustomerMainAddressExists");
+					
+					boolean existMainAddress = jdbi.withHandle(handle ->
+							handle.createQuery(sql2).bind("customer_id", customerPojo.getId()).mapTo(boolean.class).one());
+					
+					if(existMainAddress) {
+						String sql3 = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.update-mainAddress");
+						
+						jdbi.withHandle(handle ->
+						handle.createUpdate(sql3)
+						.bind("state", customerPojo.getAddress().getState())
+						.bind("city", customerPojo.getAddress().getCity())
+						.bind("neighborhood", customerPojo.getAddress().getNeighborhood())
+						.bind("zipCode", customerPojo.getAddress().getZipCode())
+						.bind("street", customerPojo.getAddress().getStreet())
+						.bind("number", customerPojo.getAddress().getNumber())
+						.bind("additionalInformation", customerPojo.getAddress().getAdditionalInformation())
+						.bind("customer_id", customerPojo.getId())
+						.bind("main", customerPojo.getAddress().getMain())
+						.execute());
+					}else {
+						System.out.println("Customer não possui MainAddress para ser atualizado");
+					}
+					
+				}
+				return buscar(customerPojo.getId());
+			}
+		}else {
+			return null;
+		}
+		
 	}
 
+	@Override
+	public boolean deletar(Long id) {
+		String sql = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.select-IfCustomerExists");
 
-	
+		boolean existCustomer = jdbi.withHandle(handle ->	
+			handle.createQuery(sql)
+			.bind("id", id).mapTo(boolean.class).one());
 
+		if(existCustomer) {
+			//DELETA Adresses do Customer
+			String sql1 = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.delete-customerAddress");
+			jdbi.withHandle(handle -> 
+			handle.createUpdate(sql1)
+				.bind("customer_id", id)
+				.execute());
+
+			//DELETA Customer
+			String sql2 = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.delete-customer");
+			jdbi.withHandle(handle -> 
+				handle.createUpdate(sql2)
+				.bind("id", id)
+				.execute());
+
+			return true;
+		}else {
+			return false;
+		}
+
+	}
 }
