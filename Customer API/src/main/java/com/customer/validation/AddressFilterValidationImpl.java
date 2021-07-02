@@ -1,6 +1,9 @@
 package com.customer.validation;
 
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.customer.filter.AddressFilter;
 import com.customer.services.JsonService;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
@@ -22,101 +25,77 @@ public class AddressFilterValidationImpl implements AddressFilterValidation{
 			if(e instanceof MismatchedInputException) {
 				return null;
 			}else {
-				e.printStackTrace();//ERRO JSON INV¡LIDO
+				e.printStackTrace();//ERRO JSON INVÔøΩLIDO
 			}
-		}
-		/*
-		ApiError apiError = null;
-		JsonNode node;
-		
-		try {
-			node = JsonServiceImpl.StringToJson(requestBody);
-		}catch (Exception e) {
-			apiError.setCode("json_format");
-			apiError.setDescription("Falha, Json do corpo da requisiÁ„o Inv·lido.");
-			
-			return apiError;
 		}
 		
 		Pattern regexPattern = null;
         Matcher regMatcher = null;
         
-        if(node.get("id") == null) {
-		}else {
-			regexPattern = Pattern.compile("\\d+");
-			regMatcher = regexPattern.matcher(node.get("id").asText());
-			
-			if(!regMatcher.matches()) {
-				apiError.setCode("json_filter");
-				apiError.setDescription("Id deve ser somente n˙meros.");
-				
-				return apiError;
-			}
-		}
-        if(node.get("state") == null) {
-		}else {
-			regexPattern = Pattern.compile("AC|AL|AP|AM|BA|CE|DF|ES|GO|MA|MT|MS|MG|PA|PB|PR|PE|PI|RJ|RN|RS|RO|RR|SC|SP|SE|TO");
-			regMatcher = regexPattern.matcher(node.get("state").asText());
-			
-			if(!regMatcher.matches()) {
-				apiError.setCode("json_filter");
-				apiError.setDescription("Estado(state) inv·lido, considere o formato ex: 'SP'.");
-				
-				return apiError;
-			}
-		}
-        if(node.get("zipCode") == null) {
-		}else {
-			regexPattern = Pattern.compile("[0-9]{5}[-][0-9]{3}");
-	        regMatcher = regexPattern.matcher(node.get("zipCode").asText());
-	       
-	        if(!regMatcher.matches()) {
-				apiError.setCode("json_filter");
-				apiError.setDescription("Cep(zipCode) inv·lido, considere o formato ex: '06432-444'.");
-				
-				return apiError;
-	        }
-		}
-        if(node.get("number") == null) {
-		}else {
-			regexPattern = Pattern.compile("\\d+");
-			regMatcher = regexPattern.matcher(node.get("id").asText());
-			
-			if(!regMatcher.matches()) {
-				apiError.setCode("json_filter");
-				apiError.setDescription("Numero(number) deve ser somente n˙meros.");
-				
-				return apiError;
-			}
-		}
-        if(node.get("main") == null) {
-		}else if(node.get("main").asBoolean() == true || node.get("main").asBoolean() == false){
-		}else {
-			apiError.setCode("json_filter");
-			apiError.setDescription("EndereÁo principal(main) inv·lido, considere 'true' ou 'false'.");
-			
-			return apiError;
-		}
-        if(node.findValue("sortBy") != null) {
-        	regexPattern = Pattern.compile("ID|STATE|CITY|NEIGHBORHOOD|ZIPCODE|STREET|NUMBER|ADDITIONALINFORMATION|MAIN");
-        	regMatcher = regexPattern.matcher(node.get("sortBy").asText());
+        if(addressFilter.getId() != null) {
+        	regexPattern = Pattern.compile("\\d+");
+        	regMatcher = regexPattern.matcher(addressFilter.getId());
+        	
         	if(!regMatcher.matches()) {
-        		apiError.setCode("json_filter");
-        		apiError.setDescription("Ordenar por(sortBy) inv·lido, considere um destes valores: 'ID, STATE, CITY, NEIGHBORHOOD, ZIPCODE, STREET, NUMBER, ADDITIONALINFORMATION ou MAIN'.");
-        			
-        		return apiError;
+        		System.out.println("Id deve ser somente n√∫meros.");
+        		
+        		return null;
         	}
         }
-        if(node.findValue("sortOrder") != null) {
-        	regexPattern = Pattern.compile("ASC|DESC");
-        	regMatcher = regexPattern.matcher(node.get("sortOrder").asText());
+        if(addressFilter.getState() != null) {
+			regexPattern = Pattern.compile("AC|AL|AP|AM|BA|CE|DF|ES|GO|MA|MT|MS|MG|PA|PB|PR|PE|PI|RJ|RN|RS|RO|RR|SC|SP|SE|TO");
+			regMatcher = regexPattern.matcher(addressFilter.getState());
+			
+			if(!regMatcher.matches()) {
+				System.out.println("Estado(state) inv√°lido, considere o formato ex: 'SP'.");
+				
+				return null;
+			}
+		}
+        if(addressFilter.getZipCode() != null) {
+			regexPattern = Pattern.compile("[0-9]{5}[-][0-9]{3}");
+	        regMatcher = regexPattern.matcher(addressFilter.getZipCode());
+	       
+	        if(!regMatcher.matches()) {
+				System.out.println("Cep(zipCode) inv√°lido, considere o formato ex: '06432-444'.");
+				
+				return null;
+	        }
+		}
+        if(addressFilter.getNumber() != null) {
+			regexPattern = Pattern.compile("\\d+");
+			regMatcher = regexPattern.matcher(addressFilter.getNumber());
+			
+			if(!regMatcher.matches()) {
+				System.out.println("Numero(number) deve ser somente n√∫meros.");
+				
+				return null;
+			}
+		}
+        if(addressFilter.getMain().equalsIgnoreCase("true") || addressFilter.getMain().equalsIgnoreCase("false")){
+		}else {
+			System.out.println("Endere√ßo principal(main) inv√°lido, considere 'true' ou 'false'.");
+			
+			return null;
+		}
+        if(addressFilter.getSortBy() != null) {
+        	regexPattern = Pattern.compile("ID|STATE|CITY|NEIGHBORHOOD|ZIPCODE|STREET|NUMBER|ADDITIONALINFORMATION|MAIN");
+        	regMatcher = regexPattern.matcher(addressFilter.getSortBy());
         	if(!regMatcher.matches()) {
-        		apiError.setCode("json_filter");
-        		apiError.setDescription("ordem de classificaÁ„o(sortOrder) inv·lido, considere um destes valores: 'ASC ou DESC'.");
-        		
-        		return apiError;
+        		System.out.println("Ordenar por(sortBy) inv√°lido, considere um destes valores: 'ID, STATE, CITY, NEIGHBORHOOD, ZIPCODE, STREET, NUMBER, ADDITIONALINFORMATION ou MAIN'.");
+        			
+        		return null;
         	}
-        }*/
+        }
+        if(addressFilter.getSortOrder() != null) {
+        	regexPattern = Pattern.compile("ASC|DESC");
+        	regMatcher = regexPattern.matcher(addressFilter.getSortOrder());
+        	if(!regMatcher.matches()) {
+        		System.out.println("ordem de classifica√ß√£o(sortOrder) inv√°lido, considere um destes valores: 'ASC ou DESC'.");
+        		
+        		return null;
+        	}
+        }
 		return addressFilter;
 	}
 

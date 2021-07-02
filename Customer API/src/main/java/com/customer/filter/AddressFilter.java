@@ -1,7 +1,7 @@
 package com.customer.filter;
 
 public class AddressFilter {
-	private Integer id;
+	private String id;
 	private String state;
 	private String city;
 	private String neighborhood;
@@ -9,15 +9,21 @@ public class AddressFilter {
 	private String street;
 	private String number;
 	private String additionalInformation;
-	private boolean main;
+	private String main;
 	private String sortBy;
 	private String sortOrder;
 	
-	public Integer getId() {
+	public String getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+	public void setId(String id) {
 		this.id = id;
+	}
+	public String getMain() {
+		return main;
+	}
+	public void setMain(String main) {
+		this.main = main;
 	}
 	public String getState() {
 		return state;
@@ -60,12 +66,6 @@ public class AddressFilter {
 	}
 	public void setAdditionalInformation(String additionalInformation) {
 		this.additionalInformation = additionalInformation;
-	}
-	public boolean isMain() {
-		return main;
-	}
-	public void setMain(boolean main) {
-		this.main = main;
 	}
 	public String getSortBy() {
 		return sortBy;

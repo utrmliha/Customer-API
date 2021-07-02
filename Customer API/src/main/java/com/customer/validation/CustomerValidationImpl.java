@@ -1,5 +1,10 @@
 package com.customer.validation;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.customer.pojo.CustomerPojo;
 import com.customer.services.JsonService;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
@@ -27,7 +32,7 @@ public class CustomerValidationImpl implements CustomerValidation{
 			}
 		}
 		
-		/*
+		
 		Pattern regexPattern = null;
         Matcher regMatcher = null;
 
@@ -35,99 +40,89 @@ public class CustomerValidationImpl implements CustomerValidation{
 			System.out.println("Nome(name) do cliente é um campo obrigatório.");
 		}else{
 			regexPattern = Pattern.compile("([0-9])");
-	        regMatcher = regexPattern.matcher(node.get("name").asText());
+	        regMatcher = regexPattern.matcher(customerPojo.getName());
 	        
 	        if(regMatcher.matches()) {
-	        	apiError.setCode("json_filter");
-	        	apiError.setDescription("Nome(name) do cliente inválido.");
+	        	//apiError.setCode("json_filter");
+	        	System.out.println("Nome(name) do cliente inválido.");
 	        	
-	        	return apiError;
+	        	return null;
 	        }
 		}
-		if(node.get("email") == null) {
-			apiError.setCode("json_filter");
-			apiError.setDescription("Email(email) do cliente é um campo obrigatório.");
+		if(customerPojo.getEmail() == null || customerPojo.getEmail().isBlank()) {
+			System.out.println("Email(email) do cliente é um campo obrigatório.");
 			
-			return apiError;
+			return null;
 		}else {
 			regexPattern = Pattern.compile("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
-	        regMatcher = regexPattern.matcher(node.get("email").asText());
+	        regMatcher = regexPattern.matcher(customerPojo.getEmail());
 	        
 	        if(!regMatcher.matches()) {
-				apiError.setCode("json_filter");
-				apiError.setDescription("Email(email) inválido, considere o formato ex: 'email@email.com'.");
+				System.out.println("Email(email) inválido, considere o formato ex: 'email@email.com'.");
 				
-				return apiError;
+				return null;
 	        }
 		}
-		if(node.get("birthDate") == null) {
-			apiError.setCode("json_filter");
-			apiError.setDescription("Data de nascimento(birthDate) do cliente é um campo obrigatório.");
+		if(customerPojo.getBirthDate() == null || customerPojo.getBirthDate().isBlank()) {
+			System.out.println("Data de nascimento(birthDate) do cliente é um campo obrigatório.");
 			
-			return apiError;
+			return null;
 		}else {
 			regexPattern = Pattern.compile("^((?:(?:1[6-9]|2[0-9])\\d{2})(-)(?:(?:(?:0[13578]|1[02])(-)31)|((0[1,3-9]|1[0-2])(-)(29|30))))$|^(?:(?:(?:(?:1[6-9]|[2-9]\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00)))(-)02(-)29)$|^(?:(?:1[6-9]|2[0-9])\\d{2})(-)(?:(?:0[1-9])|(?:1[0-2]))(-)(?:0[1-9]|1\\d|2[0-8])$");
-	        regMatcher = regexPattern.matcher(node.get("birthDate").asText());
+	        regMatcher = regexPattern.matcher(customerPojo.getBirthDate());
 	        
 	        if(!regMatcher.matches()) {
-				apiError.setCode("json_filter");
-				apiError.setDescription("Data de nascimento(birthDate) inválida, considere o formato ex: '1980-12-28'.");
+				System.out.println("Data de nascimento(birthDate) inválida, considere o formato ex: '1980-12-28'.");
 				
-				return apiError;
+				return null;
 	        }else {
-	        	int dia = Integer.parseInt(node.get("birthDate").asText().split("-")[2]);
-	        	int mes = Integer.parseInt(node.get("birthDate").asText().split("-")[1].split("-")[0]);
-	        	int ano = Integer.parseInt(node.get("birthDate").asText().split("-")[0]);
+	        	int dia = Integer.parseInt(customerPojo.getBirthDate().split("-")[2]);
+	        	int mes = Integer.parseInt(customerPojo.getBirthDate().split("-")[1].split("-")[0]);
+	        	int ano = Integer.parseInt(customerPojo.getBirthDate().split("-")[0]);
 	        	int idade = LocalDate.now().minus(Period.of(ano, mes, dia)).getYear();
 	        	
 	        	if(idade > 100) {
-					apiError.setCode("json_filter");
-					apiError.setDescription("Data de nascimento(birthDate) inválida.");
+					System.out.println("Data de nascimento(birthDate) inválida.");
 	        	}
 	        }
 		}
-		if(node.get("cpf") == null) {
-			apiError.setCode("json_filter");
-			apiError.setDescription("Cpf(cpf) do cliente é um campo obrigatório.");
+		if(customerPojo.getCpf() == null || customerPojo.getCpf().isBlank()) {
+			System.out.println("Cpf(cpf) do cliente é um campo obrigatório.");
 			
-			return apiError;
+			return null;
 		}else {
 			regexPattern = Pattern.compile("[0-9]{3}[0-9]{3}[0-9]{3}[0-9]{2}");
-	        regMatcher = regexPattern.matcher(node.get("cpf").asText());
+	        regMatcher = regexPattern.matcher(customerPojo.getCpf());
 	        
 	        if(regMatcher.matches()) {
-				apiError.setCode("json_filter");
-				apiError.setDescription("CPF(cpf) inválido, considere o formato ex: '756.684.987-69'.");
+				System.out.println("CPF(cpf) inválido, considere o formato ex: '756.684.987-69'.");
 				
-				return apiError;
+				return null;
 	        }else{
 				regexPattern = Pattern.compile("^[0-9]{3}[\\.][0-9]{3}[\\.][0-9]{3}[-][0-9]{2}$");
-				Matcher regMatcher2 = regexPattern.matcher(node.get("cpf").asText());
+				Matcher regMatcher2 = regexPattern.matcher(customerPojo.getCpf());
 				
 		        if(!regMatcher2.matches()) {
-					apiError.setCode("json_filter");
-					apiError.setDescription("CPF(cpf) inválido.");
+					System.out.println("CPF(cpf) inválido.");
 					
-					return apiError;
+					return null;
 		        }
 		    }
 		}
-		if(node.get("gender") == null) {
-			apiError.setCode("json_filter");
-			apiError.setDescription("Gênero(gender) do cliente é um campo obrigatório.");
+		if(customerPojo.getGender() == null || customerPojo.getGender().isBlank()) {
+			System.out.println("Gênero(gender) do cliente é um campo obrigatório.");
 			
-			return apiError;
+			return null;
 		}else {
-			String gender = node.get("gender").asText();
+			String gender = customerPojo.getGender();
 			
 			if(gender.equalsIgnoreCase("FEMININO") || gender.equalsIgnoreCase("MASCULINO")) {
 			}else {
-				apiError.setCode("json_filter");
-				apiError.setDescription("Genero(gender) inválido, considere: 'Feminino' ou 'Masculino'.");
+				System.out.println("Genero(gender) inválido, considere: 'Feminino' ou 'Masculino'.");
 				
-				return apiError;
+				return null;
 			}
-		}*/
+		}
 		return customerPojo;
 	}
 }

@@ -16,13 +16,13 @@ public class AddressFilterServiceImpl implements AddressFilterService{
 		String Query = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.select-filteredAddresses");
 		List<String> filtrarPor = new ArrayList<String>();
 		
-		if(addressFilter.getId() == null || addressFilter.getId() < 1) {
+		if(addressFilter.getId() == null) {
 		}else {
 			filtrarPor.add("id = "+ addressFilter.getId());
 		}
 		if(addressFilter.getState() == null || addressFilter.getState().isBlank()) {
 		}else {
-			filtrarPor.add("state = "+ addressFilter.getState());
+			filtrarPor.add("state = '"+ addressFilter.getState()+"'");
 		}
 		if(addressFilter.getCity() == null || addressFilter.getCity().isBlank()) {
 		}else {
@@ -34,7 +34,7 @@ public class AddressFilterServiceImpl implements AddressFilterService{
 		}
 		if(addressFilter.getZipCode() == null || addressFilter.getZipCode().isBlank()) {
 		}else {
-			filtrarPor.add("zipCode = "+ addressFilter.getZipCode());
+			filtrarPor.add("zipCode = '"+ addressFilter.getZipCode()+"'");
 		}
 		if(addressFilter.getStreet() == null || addressFilter.getStreet().isBlank()) {
 		}else {
@@ -42,14 +42,14 @@ public class AddressFilterServiceImpl implements AddressFilterService{
 		}
 		if(addressFilter.getNumber() == null || addressFilter.getNumber().isBlank()) {
 		}else {
-			filtrarPor.add("number = "+ addressFilter.getNumber());
+			filtrarPor.add("number = '"+ addressFilter.getNumber()+"'");
 		}
 		if(addressFilter.getAdditionalInformation() == null || addressFilter.getAdditionalInformation().isBlank()) {
 		}else {
 			filtrarPor.add("additionalInformation LIKE '%"+ addressFilter.getAdditionalInformation()+ "%'");
 		}
-		if(addressFilter.isMain()) {
-			filtrarPor.add("main = "+ addressFilter.isMain());
+		if(addressFilter.getMain().equalsIgnoreCase("true")) {
+			filtrarPor.add("main = "+ addressFilter.getMain());
 		}
 		if(addressFilter.getSortBy() == null || addressFilter.getSortBy().isBlank()) {
 			filtrarPor.add("ORDER BY id ");
