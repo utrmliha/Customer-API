@@ -77,7 +77,9 @@ public class DaoAddressImpl implements DaoAddress{
 		List<Address> adresses;
 		
 		if((adresses = 
-				jdbi.withHandle(handle -> handle.createQuery(sql).map(new AddressMapper()).list())
+				jdbi.withHandle(handle -> handle.createQuery(sql)
+						.bind("customer_id", customer_id)
+						.map(new AddressMapper()).list())
 				) == null) {
 			return null;
 		}else {
