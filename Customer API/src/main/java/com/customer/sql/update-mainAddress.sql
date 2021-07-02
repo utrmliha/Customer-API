@@ -6,5 +6,5 @@ UPDATE address SET  state = :state,
 					number = :number,
 					additionalInformation = :additionalInformation,
 					main = :main
-WHERE				customer_id = :customer_id and 
+WHERE				customer_id = :customer_id AND 
 					main = :main
