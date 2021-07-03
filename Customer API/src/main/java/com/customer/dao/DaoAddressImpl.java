@@ -21,7 +21,9 @@ public class DaoAddressImpl implements DaoAddress{
 		String sql1 = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.select-IfCustomerExists");
 		
 		boolean existsCustomer = jdbi.withHandle(handle ->
-				handle.createQuery(sql1).mapTo(boolean.class).one());
+				handle.createQuery(sql1)
+				.bind("id", addressPojo.getCustomer_id())
+				.mapTo(boolean.class).one());
 		
 		if(existsCustomer) {
 			if(addressPojo.getMain()) {

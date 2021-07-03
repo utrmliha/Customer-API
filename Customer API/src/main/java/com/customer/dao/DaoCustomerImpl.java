@@ -46,7 +46,6 @@ public class DaoCustomerImpl implements DaoCustomer{
 			.bind("updateAt", customerPojo.getUpdateAt())
 			.executeAndReturnGeneratedKeys("id").mapTo(Long.class).one());
 		}catch (Exception e) {
-			// org.jdbi.v3.core.statement.UnableToExecuteStatementException: java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '915.555.340-70' for key 'cpf' 
 			return null;
 		}
 		customerPojo.setId(idCustomer);
@@ -296,7 +295,7 @@ public class DaoCustomerImpl implements DaoCustomer{
 
 		if(existCustomer) {
 			//DELETA Adresses do Customer
-			String sql1 = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.delete-customerAddress");
+			String sql1 = ClasspathSqlLocator.findSqlOnClasspath("com.customer.sql.delete-customerAddressByOnlyId");
 			jdbi.withHandle(handle -> 
 			handle.createUpdate(sql1)
 				.bind("customer_id", id)
