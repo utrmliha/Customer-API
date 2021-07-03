@@ -1,10 +1,10 @@
 package com.customer.services;
 
-import java.io.IOException;
 import java.util.List;
 
 import com.customer.dao.DaoCustomer;
 import com.customer.dto.Customer;
+import com.customer.error.MappingException;
 import com.customer.filter.CustomerFilter;
 import com.customer.pojo.CustomerPojo;
 import com.customer.validation.CustomerFilterValidation;
@@ -26,20 +26,23 @@ public class CustomerServiceImpl implements CustomerService{
 	private DaoCustomer daoCustomer;
 	
 	@Override
-	public Customer criar(Request request, Response response){
+	public Customer criar(Request request, Response response) throws MappingException{
+		
 		CustomerPojo customerPojo = null;
-		try {
-			customerPojo = customerValidation.validate(request);
-		}catch (IOException e) {
-			e.printStackTrace();
-			return null;//RETORNA ERROR CUSTOMER NAO ENCONTRADO
+
+		customerPojo = customerValidation.validate(request);
+
+		Customer customer;
+		if((customer = daoCustomer.salvar(customerPojo)) != null) {
+			response.type("application/json");
+			return customer;
+		}else {
+			throw new MappingException("Cpf já cadastrado.");
 		}
-		response.status(404);
-		return daoCustomer.salvar(customerPojo);
 	}
 	
 	@Override
-	public List<Customer> listar(Request request, Response response) {
+	public List<Customer> listar(Request request, Response response) throws MappingException{
 		List<Customer> customers = null;
 		CustomerFilter customerFilter = null;
 		
@@ -51,53 +54,51 @@ public class CustomerServiceImpl implements CustomerService{
 		}
 		
 		if(customers != null && customers.size() > 0) {
+			response.type("application/json");
 			return customers;
 		}else {
-			return null;//RETORNA ERROR CUSTOMERS NAO ENCONTRADOS
+			throw new MappingException("Customers não encontrados.");
 		}
 	}
 
 	@Override
-	public Customer buscar(Request request, Response response) {
+	public Customer buscar(Request request, Response response) throws MappingException{
 		Long id = Long.parseLong(request.params("id"));
 		Customer customer = daoCustomer.buscar(id);
 		
 		if(customer != null) {
+			response.type("application/json");
 			return customer;
 		}else {
-			return null;//RETORNA ERROR CUSTOMERS NAO ENCONTRADOS
+			throw new MappingException("Customer não encontrado.");
 		}
 	}
 	
 	@Override
-	public Customer atualizar(Request request, Response response) {
+	public Customer atualizar(Request request, Response response) throws MappingException{
 		Long id = Long.parseLong(request.params("id"));
 		CustomerPojo customerPojo = null;
 		
-		try {
-			customerPojo = customerValidation.validate(request);
-			customerPojo.setId(id);
-		}catch (IOException e) {
-			e.printStackTrace();
-			//RETORNA ERROR JSON INVÁLIDO
-		}
+		customerPojo = customerValidation.validate(request);
+		customerPojo.setId(id);
 		
 		Customer customer;
 		if((customer = daoCustomer.atualizar(customerPojo)) != null) {
+			response.type("application/json");
 			return customer;
 		}else {
-			return null;//RETORNA ERROR CUSTOMER NAO ENCONTRADO
+			throw new MappingException("Customer não encontrado.");
 		}
 	}
 
 	@Override
-	public Customer deletar(Request request, Response response) {
+	public Customer deletar(Request request, Response response) throws MappingException{
 		Long id = Long.parseLong(request.params("id"));
 
 		if(daoCustomer.deletar(id)) {
-			return null;//RETORNA SUCESSO
+			throw new MappingException("Customer deletado com sucesso!");
 		}else {
-			return null;//RETORNA ERROR CUSTOMER NAO ENCONTRADO
+			throw new MappingException("Customer não encontrado.");
 		}
 	}
 

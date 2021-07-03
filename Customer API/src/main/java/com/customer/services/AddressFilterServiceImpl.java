@@ -48,7 +48,9 @@ public class AddressFilterServiceImpl implements AddressFilterService{
 		}else {
 			filtrarPor.add("additionalInformation LIKE '%"+ addressFilter.getAdditionalInformation()+ "%'");
 		}
-		if(addressFilter.getMain().equalsIgnoreCase("true")) {
+		if(addressFilter.getMain() == null) {
+			
+		}else {
 			filtrarPor.add("main = "+ addressFilter.getMain());
 		}
 		if(addressFilter.getSortBy() == null || addressFilter.getSortBy().isBlank()) {

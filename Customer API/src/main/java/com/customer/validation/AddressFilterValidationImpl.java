@@ -4,6 +4,7 @@ package com.customer.validation;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.customer.error.MappingException;
 import com.customer.filter.AddressFilter;
 import com.customer.services.JsonService;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
@@ -17,15 +18,16 @@ public class AddressFilterValidationImpl implements AddressFilterValidation{
 	JsonService jsonService;
 	
 	@Override
-	public AddressFilter validate(Request request){
+	public AddressFilter validate(Request request) throws MappingException{
 		AddressFilter addressFilter = null;
 		try {
 			addressFilter = jsonService.fromJson(request.body(), AddressFilter.class);
 		}catch (Exception e) {
 			if(e instanceof MismatchedInputException) {
+				//Se n„o tiver nada no body, ignora
 				return null;
 			}else {
-				e.printStackTrace();//ERRO JSON INVÔøΩLIDO
+				throw new MappingException("Formato do Json inv·lido.");
 			}
 		}
 		
@@ -37,9 +39,8 @@ public class AddressFilterValidationImpl implements AddressFilterValidation{
         	regMatcher = regexPattern.matcher(addressFilter.getId());
         	
         	if(!regMatcher.matches()) {
-        		System.out.println("Id deve ser somente n√∫meros.");
+        		throw new MappingException("Id inv·lido, somente n˙meros.");
         		
-        		return null;
         	}
         }
         if(addressFilter.getState() != null) {
@@ -47,9 +48,8 @@ public class AddressFilterValidationImpl implements AddressFilterValidation{
 			regMatcher = regexPattern.matcher(addressFilter.getState());
 			
 			if(!regMatcher.matches()) {
-				System.out.println("Estado(state) inv√°lido, considere o formato ex: 'SP'.");
+				throw new MappingException("Estado(state) inv·lido, considere o formato ex: 'SP'.");
 				
-				return null;
 			}
 		}
         if(addressFilter.getZipCode() != null) {
@@ -57,9 +57,8 @@ public class AddressFilterValidationImpl implements AddressFilterValidation{
 	        regMatcher = regexPattern.matcher(addressFilter.getZipCode());
 	       
 	        if(!regMatcher.matches()) {
-				System.out.println("Cep(zipCode) inv√°lido, considere o formato ex: '06432-444'.");
+				throw new MappingException("Cep(zipCode) inv·lido, considere o formato ex: '06432-444'.");
 				
-				return null;
 	        }
 		}
         if(addressFilter.getNumber() != null) {
@@ -67,33 +66,28 @@ public class AddressFilterValidationImpl implements AddressFilterValidation{
 			regMatcher = regexPattern.matcher(addressFilter.getNumber());
 			
 			if(!regMatcher.matches()) {
-				System.out.println("Numero(number) deve ser somente n√∫meros.");
+				throw new MappingException("Numero(number) inv·lido, somente n˙meros.");
 				
-				return null;
 			}
 		}
-        if(addressFilter.getMain().equalsIgnoreCase("true") || addressFilter.getMain().equalsIgnoreCase("false")){
-		}else {
-			System.out.println("Endere√ßo principal(main) inv√°lido, considere 'true' ou 'false'.");
-			
-			return null;
+        if(addressFilter.getMain() == null || addressFilter.getMain().equalsIgnoreCase("true") || addressFilter.getMain().equalsIgnoreCase("false")) {
+        }else {
+			throw new MappingException("EndereÁo principal(main) inv·lido, considere 'true' ou 'false'.");
 		}
         if(addressFilter.getSortBy() != null) {
         	regexPattern = Pattern.compile("ID|STATE|CITY|NEIGHBORHOOD|ZIPCODE|STREET|NUMBER|ADDITIONALINFORMATION|MAIN");
         	regMatcher = regexPattern.matcher(addressFilter.getSortBy());
         	if(!regMatcher.matches()) {
-        		System.out.println("Ordenar por(sortBy) inv√°lido, considere um destes valores: 'ID, STATE, CITY, NEIGHBORHOOD, ZIPCODE, STREET, NUMBER, ADDITIONALINFORMATION ou MAIN'.");
+        		throw new MappingException("Ordenar por(sortBy) inv·lido, considere um destes valores: 'ID, STATE, CITY, NEIGHBORHOOD, ZIPCODE, STREET, NUMBER, ADDITIONALINFORMATION ou MAIN'.");
         			
-        		return null;
         	}
         }
         if(addressFilter.getSortOrder() != null) {
         	regexPattern = Pattern.compile("ASC|DESC");
         	regMatcher = regexPattern.matcher(addressFilter.getSortOrder());
         	if(!regMatcher.matches()) {
-        		System.out.println("ordem de classifica√ß√£o(sortOrder) inv√°lido, considere um destes valores: 'ASC ou DESC'.");
+        		throw new MappingException("ordem de classificaÁ„o(sortOrder) inv·lido, considere um destes valores: 'ASC ou DESC'.");
         		
-        		return null;
         	}
         }
 		return addressFilter;

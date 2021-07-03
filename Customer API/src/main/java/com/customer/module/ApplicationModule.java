@@ -15,6 +15,8 @@ import com.customer.services.CustomerFilterService;
 import com.customer.services.CustomerFilterServiceImpl;
 import com.customer.services.CustomerService;
 import com.customer.services.CustomerServiceImpl;
+import com.customer.services.ErrorMappingService;
+import com.customer.services.ErrorMappingServiceImpl;
 import com.customer.services.JsonService;
 import com.customer.services.JsonServiceImpl;
 import com.customer.validation.AddressFilterValidation;
@@ -47,6 +49,7 @@ public class ApplicationModule extends AbstractModule {
 		bind(AddressFilterService.class).to(AddressFilterServiceImpl.class);
 		
 		bind(JsonService.class).to(JsonServiceImpl.class);
+		bind(ErrorMappingService.class).to(ErrorMappingServiceImpl.class);
 		
 		bind(DaoCustomer.class).to(DaoCustomerImpl.class).in(Singleton.class);
 		bind(DaoAddress.class).to(DaoAddressImpl.class).in(Singleton.class);

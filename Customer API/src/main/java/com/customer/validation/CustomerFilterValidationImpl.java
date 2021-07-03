@@ -3,6 +3,7 @@ package com.customer.validation;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.customer.error.MappingException;
 import com.customer.filter.CustomerFilter;
 import com.customer.services.JsonService;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
@@ -16,15 +17,16 @@ public class CustomerFilterValidationImpl implements CustomerFilterValidation {
 	JsonService jsonService;
 	
 	@Override
-	public CustomerFilter validate(Request request){
+	public CustomerFilter validate(Request request) throws MappingException{
 		CustomerFilter customerFilter = null;
 		try {
 			customerFilter = jsonService.fromJson(request.body(), CustomerFilter.class);
 		}catch (Exception e) {
 			if(e instanceof MismatchedInputException) {
+				//Se não tiver nada no body, ignora
 				return null;
 			}else {
-				e.printStackTrace();//ERRO JSON INVÁLIDO
+				throw new MappingException("Formato do Json inválido.");
 			}
 		}
 		
@@ -36,28 +38,24 @@ public class CustomerFilterValidationImpl implements CustomerFilterValidation {
         	regMatcher = regexPattern.matcher(customerFilter.getBirthDate());
         	
         	if(!regMatcher.matches()) {
+        		throw new MappingException("Data de nascimento(birthDate) inválida, considere o formato ex: '1980-12-28'.");
         		
-        		System.out.println("Data de nascimento(birthDate) inválida, considere o formato ex: '1980-12-28'.");
-        		
-        		return null;
         	}
         }
         if(customerFilter.getSortBy() != null) {
         	regexPattern = Pattern.compile("CUSTOMER_NAME|CUSTOMER_BIRTH_DATE|CUSTOMER_CREATED_AT|ADDRESS_STATE|ADDRESS_CITY");
         	regMatcher = regexPattern.matcher(customerFilter.getSortBy() );
         	if(!regMatcher.matches()) {
-        		System.out.println("Ordenar por(sortBy) inválido, considere um destes valores: 'CUSTOMER_NAME, CUSTOMER_BIRTH_DATE, CUSTOMER_CREATED_AT, ADDRESS_STATE ou ADDRESS_CITY'.");
+        		throw new MappingException("Ordenar por(sortBy) inválido, considere um destes valores: 'CUSTOMER_NAME, CUSTOMER_BIRTH_DATE, CUSTOMER_CREATED_AT, ADDRESS_STATE ou ADDRESS_CITY'.");
 
-        		return null;
         	}
         }
         if(customerFilter.getSortOrder() != null) {
         	regexPattern = Pattern.compile("ASC|DESC");
         	regMatcher = regexPattern.matcher(customerFilter.getSortOrder());
         	if(!regMatcher.matches()) {
-        		System.out.println("ordem de classificação(sortOrder) inválido, considere um destes valores: 'ASC ou DESC'.");
+        		throw new MappingException("ordem de classificação(sortOrder) inválido, considere um destes valores: 'ASC ou DESC'.");
 
-        		return null;
         	}
         }
 		

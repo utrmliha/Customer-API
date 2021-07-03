@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.customer.dao.DaoAddress;
 import com.customer.dto.Address;
+import com.customer.error.MappingException;
 import com.customer.filter.AddressFilter;
 import com.customer.pojo.AddressPojo;
 import com.customer.validation.AddressFilterValidation;
@@ -25,27 +26,23 @@ public class AddressServiceImpl implements AddressService{
 	private DaoAddress daoAddress;
 	
 	@Override
-	public Address criar(Request request, Response response) {
+	public Address criar(Request request, Response response) throws MappingException {
 		AddressPojo addressPojo = null;
 		
-		try {
-			addressPojo = addressValidation.validate(request);
-			addressPojo.setCustomer_id(Long.parseLong(request.params("id")));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null; //ERRO Json inválido
-		}
+		addressPojo = addressValidation.validate(request);
+		addressPojo.setCustomer_id(Long.parseLong(request.params("id")));
 		
 		Address address;		
 		if((address = daoAddress.salvar(addressPojo)) == null) {
-			return null;//Customer não existe
+			throw new MappingException("Customer não encontrado.");
 		}else {
+			response.type("application/json");
 			return address;
 		}
 	}
 
 	@Override
-	public List<Address> listar(Request request, Response response) {
+	public List<Address> listar(Request request, Response response) throws MappingException {
 		List<Address> adresses = null;
 		AddressFilter addressFilter = null;
 		Long customer_id = Long.parseLong(request.params("id"));
@@ -58,58 +55,56 @@ public class AddressServiceImpl implements AddressService{
 		}
 		
 		if(adresses != null && adresses.size() > 0) {
+			response.type("application/json");
 			return adresses;
 		}else {
-			return null;//RETORNA ERROR ADRESSES NAO ENCONTRADOS
+			throw new MappingException("Adresses não encontrado.");
 		}
 		
 	}
 
 	@Override
-	public Address buscar(Request request, Response response) {
+	public Address buscar(Request request, Response response) throws MappingException {
 		AddressPojo addressPojo = new AddressPojo();
 		addressPojo.setId(Long.parseLong(request.params("address_id")));
 		addressPojo.setCustomer_id(Long.parseLong(request.params("id")));
 		
 		Address address = daoAddress.buscar(addressPojo);
 		if(address != null) {
+			response.type("application/json");
 			return address;
 		}else {
-			return null;//RETORNA ERROR ADDRESS NAO ENCONTRADO
+			throw new MappingException("Address não encontrado.");
 		}
 	}
 
 	@Override
-	public Address atualizar(Request request, Response response) {
+	public Address atualizar(Request request, Response response) throws MappingException {
 		AddressPojo addressPojo = null;
 		
-		try {
-			addressPojo = addressValidation.validate(request);
-			addressPojo.setCustomer_id(Long.parseLong(request.params("id")));
-			addressPojo.setId(Long.parseLong(request.params("address_id")));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null; //ERRO Json inválido
-		}
+		addressPojo = addressValidation.validate(request);
+		addressPojo.setCustomer_id(Long.parseLong(request.params("id")));
+		addressPojo.setId(Long.parseLong(request.params("address_id")));
 		
 		Address address;
-		if((address = daoAddress.atualizar(addressPojo)) != null) {
+		if((address = daoAddress.atualizar(addressPojo)) != null){
+			response.type("application/json");
 			return address;
 		}else {
-			return null;//RETORNA ERROR ADDRESS NAO ENCONTRADO
+			throw new MappingException("Address não encontrado.");
 		}
 	}
 
 	@Override
-	public Address deletar(Request request, Response response) {
+	public Address deletar(Request request, Response response) throws MappingException {
 		AddressPojo addressPojo = new AddressPojo();
 		addressPojo.setId(Long.parseLong(request.params("address_id")));
 		addressPojo.setCustomer_id(Long.parseLong(request.params("id")));
 		
 		if(daoAddress.deletar(addressPojo)) {
-			return null;//RETORNA SUCESSO
+			throw new MappingException("Address deletado com sucesso!");
 		}else {
-			return null;//RETORNA ERROR ADDRESS NAO ENCONTRADO
+			throw new MappingException("Address não encontrado.");
 		}
 	}
 	
